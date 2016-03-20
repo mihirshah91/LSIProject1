@@ -23,7 +23,9 @@ import com.sessionModel.SessionModel;
 public class SessionManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String,SessionModel> sessionTable =new ConcurrentHashMap<String,SessionModel>();
-       
+    public int expiryTimeinSec = 15; // always written in seconds   
+	
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -49,6 +51,8 @@ public class SessionManagerServlet extends HttpServlet {
 		String sessionId="";
 		String message="";
 		
+		//handle the case for session time-out here
+		
 		for(Cookie c: cookies)
 		{
 			if(c.getName().equals("CS5430Project1SessionId"))
@@ -65,8 +69,9 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		if(request.getParameter("replaceButton")!=null)
 		{
-			//call replace method
-			replace(sessionId,message);
+			//call replace method only if sessionid found else ignore
+			if(sessionId!="")
+				replace(sessionId,message);
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}
 		else if(request.getParameter("refreshButton")!=null)
@@ -118,7 +123,7 @@ public class SessionManagerServlet extends HttpServlet {
 		int version = s.getVersionNumber();
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE,2);
+		cal.add(Calendar.SECOND,expiryTimeinSec);
 		s.setExpiryTime(cal.getTime());
 		
 		s.setVersionNumber(version+1);
@@ -160,7 +165,7 @@ public class SessionManagerServlet extends HttpServlet {
 		//long requestDate = request.getDateHeader("If-Modified-Since");
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE,2);
+		cal.add(Calendar.SECOND,expiryTimeinSec);
 		
 		
 		

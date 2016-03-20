@@ -17,14 +17,18 @@
    int versionNumber;
    String message;
    String cookie;
-   Date expiryTime=new Date();
+   int expiryTimeinSec = 15; // always in seconds
+   Date expiryTime;
  
    public void initialize(String id)
    {
 	   sessionId=id;
   		versionNumber=1;
   		message = "Hello user";
-  		expiryTime = new Date();
+  		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND,expiryTimeinSec);
+		
+  		expiryTime = cal.getTime();
   		cookie=id + "_1" ;
    }
    
@@ -71,7 +75,7 @@ boolean sessionFound = false;
 		s.createSession(sessionID, request);
 		
 		Cookie sessionIdCookie = new Cookie("CS5430Project1SessionId",sessionID);
-		sessionIdCookie.setMaxAge(120);
+		sessionIdCookie.setMaxAge(15);
 		response.addCookie(sessionIdCookie);
 		initialize(sessionID);
 	}
