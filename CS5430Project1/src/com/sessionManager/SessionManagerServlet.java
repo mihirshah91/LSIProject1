@@ -57,7 +57,8 @@ public class SessionManagerServlet extends HttpServlet {
 				message = request.getParameter("userMessage");
 				
 				//request.
-				response.sendRedirect("index.jsp");
+				
+				
 
 			}
 		}
@@ -66,11 +67,13 @@ public class SessionManagerServlet extends HttpServlet {
 		{
 			//call replace method
 			replace(sessionId,message);
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}
 		else if(request.getParameter("refreshButton")!=null)
 		{
 			//call refresh method
 			refresh(sessionId);
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
 			
 		}
 		else if(request.getParameter("logoutButton")!=null)
@@ -78,6 +81,7 @@ public class SessionManagerServlet extends HttpServlet {
 		{
 			//call logout method
 			logout(sessionId);
+			response.sendRedirect(request.getContextPath() + "/logout.html");
 		}
 			
 		
@@ -161,7 +165,7 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		
 		
-		SessionModel s = new SessionModel(uniqueID, 0,"Hello user");
+		SessionModel s = new SessionModel(uniqueID, 1,"Hello user");
 		s.setExpiryTime(cal.getTime());
 		sessionTable.put(uniqueID, s);
 		System.out.println("unique id generated is " + uniqueID);

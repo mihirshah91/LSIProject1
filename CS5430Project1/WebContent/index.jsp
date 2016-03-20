@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>CS5300</title>
 </head>
 <body>
 
@@ -19,13 +19,13 @@
    String cookie;
    Date expiryTime=new Date();
  
-   public void initialize()
+   public void initialize(String id)
    {
-	   sessionId="blank";
-  		versionNumber=0;
+	   sessionId=id;
+  		versionNumber=1;
   		message = "Hello user";
   		expiryTime = new Date();
-  		cookie="blank";
+  		cookie=id + "_1" ;
    }
    
    
@@ -33,6 +33,12 @@
  
 <% Cookie[] cookies= request.getCookies();
 SessionManagerServlet s= new SessionManagerServlet();
+response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+response.setHeader("Pragma", "no-cache");
+//response.setDateHeader("Expires", -1);
+//response.setDateHeader("Last-Modified", new Date().getTime());
+
+
 boolean sessionFound = false;
 
 		for(Cookie c: cookies)
@@ -67,7 +73,7 @@ boolean sessionFound = false;
 		Cookie sessionIdCookie = new Cookie("CS5430Project1SessionId",sessionID);
 		sessionIdCookie.setMaxAge(120);
 		response.addCookie(sessionIdCookie);
-		initialize();
+		initialize(sessionID);
 	}
 	
 	

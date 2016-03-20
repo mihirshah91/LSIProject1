@@ -46,7 +46,7 @@ public class SessionManager {
 		System.out.println("inside create session");
 		System.out.println("sessionTable= " +sessionTable);
 		String uniqueID = UUID.randomUUID().toString();
-		SessionModel s = new SessionModel(uniqueID, 0,"Hello user");
+		SessionModel s = new SessionModel(uniqueID, 1,"Hello user");
 		sessionTable.put(uniqueID, s);
 		System.out.println("unique id generated is " + uniqueID);
 		return uniqueID;
