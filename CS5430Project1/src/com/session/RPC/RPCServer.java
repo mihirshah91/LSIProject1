@@ -76,6 +76,8 @@ public class RPCServer extends Thread {
 				System.out.println("Server Started");
 				byte[] inBuf = new byte[maxPacketSize];
 				DatagramPacket receivedPacket = new DatagramPacket(inBuf, inBuf.length);
+				
+				
 				rpcSocket.receive(receivedPacket);
 				InetAddress returnAddr = receivedPacket.getAddress();
 				int returnPort = receivedPacket.getPort();
@@ -89,22 +91,27 @@ public class RPCServer extends Thread {
 				switch (operationCode) {
 
 				case Constants.SESSIONREAD:
-					// SessionRead accepts call args and returns call results
+				{// SessionRead accepts call args and returns call results
+					System.out.println("inside switch statement");
 					outBuf = sessionRead(splitData[0], splitData[2]);
 					break;
 
+				}
 				}
 				// here outBuf should contain the callID and results of the call
 				DatagramPacket sendPkt;
 				if (outBuf != null) {
 					sendPkt = new DatagramPacket(outBuf, outBuf.length, returnAddr, returnPort);
 					rpcSocket.send(sendPkt);
-				}{
+				}
+				else
+				{
 					outBuf = "asfdd_sfsdf_23_dffsd_dfdfgg".getBytes();
 					sendPkt = new DatagramPacket(outBuf,outBuf.length , returnAddr, returnPort);
 					rpcSocket.send(sendPkt);
 				}
-			} catch (Exception e) {
+			} 
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

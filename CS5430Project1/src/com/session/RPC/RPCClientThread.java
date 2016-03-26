@@ -63,7 +63,11 @@ public class RPCClientThread extends Thread {
 				clientSocket.receive(receivePacket);
 				String data = new String(receivePacket.getData());
 				int index = data.indexOf("_");
+				
 				callidReturned = Integer.parseInt(data.substring(0, index));
+				
+				System.out.println("localNumber=" + localNumber);
+				System.out.println("caliid=" + callidReturned);
 
 			} while (callidReturned != localNumber);
 
