@@ -17,33 +17,33 @@ import javax.servlet.http.HttpServletResponse;
 import com.sessionModel.SessionModel;
 
 /**
- * Servlet implementation class SessionManagerServlet
+ * @author mihir
+ * Servlet implementation class SessionManagerServlet.
+ * It has doPost method implemented and also helper methods
  */
 @WebServlet("/SessionManagerServlet")
 public class SessionManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String,SessionModel> sessionTable =new ConcurrentHashMap<String,SessionModel>();
-    public int expiryTimeinSec = 15; // always written in seconds   
+    public int expiryTimeinSec = 180; // always written in seconds   
 	
 	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public SessionManagerServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	
+	/*
+	 * Post method of this servlet is called on form submisison. 
+	 * It first identifies the button pressed with help of request.getParameter() and takes the respective actions 
 	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
@@ -55,21 +55,20 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		for(Cookie c: cookies)
 		{
-			if(c.getName().equals("CS5430Project1SessionId"))
+			if(c.getName().equals("CS5300Project1SessionId"))
 			{
-				sessionId = c.getValue();
+				String cookieValue = c.getValue();
+				int index = cookieValue.indexOf("_");
+				sessionId = cookieValue.substring(0, index);
 				message = request.getParameter("userMessage");
-				
-				//request.
-				
-				
+			
 
 			}
 		}
 		
 		if(request.getParameter("replaceButton")!=null)
 		{
-			//call replace method only if sessionid found else ignore
+			//call replace method only if sessionid found else ignore - this can happen if session is expired and refresh is called
 			if(sessionId!="")
 				replace(sessionId,message);
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -92,10 +91,15 @@ public class SessionManagerServlet extends HttpServlet {
 		
 	}
 	
+	/*
+	 * Removes the entry from sessionTable
+	 */
+	
 	public void logout(String sessionId)
 	{
 		sessionTable.remove(sessionId);
 	}
+	
 	
 	public void refresh(String sessionId)
 	{
@@ -103,6 +107,9 @@ public class SessionManagerServlet extends HttpServlet {
 	}
 	
 	
+	/*
+	 * Replaces the message in hashmap corresponding to the sessionid
+	 */
 	public void replace(String sessionId,String message)
 	{
 		
@@ -114,6 +121,10 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		
 	}
+	
+	/*
+	 * updates the versionNumber and expiryTime for the corresponding sessionId
+	 */
 	
 	public SessionModel updateSesion(String sessionId)
 	{
@@ -135,11 +146,9 @@ public class SessionManagerServlet extends HttpServlet {
 		return null;
 	}
 	
-	public SessionModel retrieveSession(Cookie c)
+	public SessionModel retrieveSession(String sessionId)
 	{
 		System.out.println("inside retrieve sesison");
-		
-		String sessionId = c.getValue();
 		
 		SessionModel s = updateSesion(sessionId);
 		if(s!=null)
@@ -150,11 +159,19 @@ public class SessionManagerServlet extends HttpServlet {
 		
 	}
 	
+	/*
+	 * Generates the uniqueId if session not found
+	 */
 	
 	public String getUniqueId()
 	{
 		return UUID.randomUUID().toString();
 	}
+	
+	
+	/*
+	 * Creates the newEntry in the hashMap if session is not found for user request
+	 */
 	
 	public String createSession(String uniqueID,HttpServletRequest request)
 	{

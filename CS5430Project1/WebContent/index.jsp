@@ -12,14 +12,19 @@
 </head>
 <body>
 
+<%-- Declaring general variables used for display on page --%>
+
 <%!				              
    String sessionId;
    int versionNumber;
    String message;
    String cookie;
-   int expiryTimeinSec = 15; // always in seconds
+   int expiryTimeinSec = 180; // always in seconds
    Date expiryTime;
  
+   
+   // Initializing variables which are displayed on screen for first request of new session
+   
    public void initialize(String id)
    {
 	   sessionId=id;
@@ -29,11 +34,16 @@
 		cal.add(Calendar.SECOND,expiryTimeinSec);
 		
   		expiryTime = cal.getTime();
-  		cookie=id + "_1" ;
+  		cookie=id + "_1" + "_s1" ;
    }
    
    
 %>
+ 
+ <%-- Below code identifies if the cookie is set in request or not.
+ 	  If not then create the session, seth the cookie in response with expiry time
+ 	  If found, then update the seeion parameters	
+  --%>
  
 <% Cookie[] cookies= request.getCookies();
 SessionManagerServlet s= new SessionManagerServlet();
@@ -47,17 +57,18 @@ boolean sessionFound = false;
 
 		for(Cookie c: cookies)
 		{
-			
-			if(c.getName().equals("CS5430Project1SessionId"))
+			System.out.println("cookie " + c.getName());
+			if(c.getName().equals("CS5300Project1SessionId"))
 			{
-				
-				sessionId = c.getValue();
-				SessionModel sessionObj = s.retrieveSession(c);
+				String cookieValue = c.getValue();
+				int index = cookieValue.indexOf("_");
+				sessionId = cookieValue.substring(0, index);
+				SessionModel sessionObj = s.retrieveSession(sessionId);
 				if(sessionObj!=null)
 				{
 				versionNumber = sessionObj.getVersionNumber();
 				message = sessionObj.getMessage();
-				cookie = sessionId + "_" + versionNumber;
+				cookie = sessionId + "_" + versionNumber + "_s1";
 				expiryTime = sessionObj.getExpiryTime();
 				sessionFound = true;
 				}
@@ -73,9 +84,10 @@ boolean sessionFound = false;
 	{
 		String sessionID = s.getUniqueId();
 		s.createSession(sessionID, request);
+		String temp = sessionID + "_1_s1" ;
 		
-		Cookie sessionIdCookie = new Cookie("CS5430Project1SessionId",sessionID);
-		sessionIdCookie.setMaxAge(15);
+		Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId",temp);
+		sessionIdCookie.setMaxAge(expiryTimeinSec);
 		response.addCookie(sessionIdCookie);
 		initialize(sessionID);
 	}
@@ -100,10 +112,9 @@ Net id:mgs275  &nbsp;&nbsp;  Session : <% out.print(sessionId); %>
 
 <p> <% out.print(message); %> </p>
 
-<input type="text" name="userMessage" value=""></input> <br/> <br/>
-<input type="submit" name="replaceButton" value="Replace"></input>
-<input type="submit" name="refreshButton" value="Refresh"></input>
-<input type="submit" name="logoutButton" value="Logout"></input>
+<input type="submit" name="replaceButton" value="Replace"></input>  &nbsp;&nbsp; <input type="text" name="userMessage" value="" required="required" maxLength="512"></input>  <br/>
+<input type="submit" name="refreshButton" value="Refresh" formnovalidate></input> <br/>
+<input type="submit" name="logoutButton" value="Logout" formnovalidate></input> <br/>
 
 
 </form>

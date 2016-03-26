@@ -2,6 +2,12 @@ package com.sessionModel;
 
 import java.util.Date;
 
+/**
+ * 
+ * @author mihir
+ *	POJO class defining session objects
+ */
+
 public class SessionModel {
 
 	public String sessionId;
