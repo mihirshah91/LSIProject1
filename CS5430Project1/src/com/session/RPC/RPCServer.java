@@ -56,13 +56,16 @@ public class RPCServer extends Thread {
 			// create session
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.SECOND,Constants.EXPIRYTIME);
-			
-			SessionModel ses = new SessionModel(sessionId, 1,"Hello user");
+			SimpleDateFormat sdfr = new SimpleDateFormat();
+			SessionModel ses = new SessionModel(sessionId.trim(), 1,"Hello user");
 			ses.setExpiryTime(cal.getTime());
+			String outputString =callId + Constants.DELIMITER + sessionId.trim()+Constants.DELIMITER+"1"+ Constants.DELIMITER+
+					sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
 			sessionTable.put(sessionId.trim(), ses);
 			
+			return outputString.getBytes();
 		}
-		return null;
+		//return null;
 	}
 
 	public void run() {

@@ -10,7 +10,7 @@ public class RPCClient {
 
 		
 		
-	List<String> dest = new ArrayList<String>(Arrays.asList("localhost","10.132.2.214")); // list of ips of tomcat servers
+	List<String> dest = new ArrayList<String>(Arrays.asList("localhost")); // list of ips of tomcat servers
 	int portProj1bRPC = 1234;
 	int maxPacketSize = 512;
 	static int callNumber = 0;
