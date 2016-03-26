@@ -10,7 +10,7 @@ public class RPCClient {
 
 		
 		
-	List<String> dest = new ArrayList<String>(Arrays.asList("localhost")); // hardcoded for now
+	List<String> dest = new ArrayList<String>(Arrays.asList("localhost","10.132.2.214")); // list of ips of tomcat servers
 	int portProj1bRPC = 1234;
 	int maxPacketSize = 512;
 	static int callNumber = 0;
@@ -22,7 +22,7 @@ public SessionModel sendRequest(String id, int opcode) {
 		try {
 			sessionObj = null;
 			for (int i=0; i < dest.size(); i++) {
-				RPCClientThread thread = new RPCClientThread(this, id, opcode,"localhost");
+				RPCClientThread thread = new RPCClientThread(this, id, opcode,dest.get(i));
 				//RPCClientThread thread = new RPCClientThread();
 				thread.start();
 				thread.join();

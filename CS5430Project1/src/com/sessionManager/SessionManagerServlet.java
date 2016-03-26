@@ -183,7 +183,7 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		//long requestDate = request.getDateHeader("If-Modified-Since");
 		
-		Calendar cal = Calendar.getInstance();
+	/*	Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND,expiryTimeinSec);
 		
 		
@@ -191,7 +191,9 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		SessionModel s = new SessionModel(uniqueID, 1,"Hello user");
 		s.setExpiryTime(cal.getTime());
-		sessionTable.put(uniqueID.trim(), s);
+		sessionTable.put(uniqueID.trim(), s);*/
+		RPCClient c = new RPCClient();
+		SessionModel s = c.sendRequest(uniqueID, Constants.SESSIONREAD);
 		System.out.println("unique id generated is " + uniqueID);
 		return uniqueID;
 		

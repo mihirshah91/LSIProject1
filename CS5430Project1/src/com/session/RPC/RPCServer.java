@@ -51,6 +51,17 @@ public class RPCServer extends Thread {
 
 			return data.getBytes();
 		}
+		else
+		{
+			// create session
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.SECOND,Constants.EXPIRYTIME);
+			
+			SessionModel ses = new SessionModel(sessionId, 1,"Hello user");
+			ses.setExpiryTime(cal.getTime());
+			sessionTable.put(sessionId.trim(), ses);
+			
+		}
 		return null;
 	}
 
