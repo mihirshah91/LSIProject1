@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.session.RPC.RPCClient;
 import com.sessionModel.SessionModel;
 
 /**
@@ -149,8 +150,9 @@ public class SessionManagerServlet extends HttpServlet {
 	public SessionModel retrieveSession(String sessionId)
 	{
 		System.out.println("inside retrieve sesison");
+		RPCClient c = new RPCClient();
 		
-		SessionModel s = updateSesion(sessionId);
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD);
 		if(s!=null)
 			return s;
 	
@@ -189,7 +191,7 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		SessionModel s = new SessionModel(uniqueID, 1,"Hello user");
 		s.setExpiryTime(cal.getTime());
-		sessionTable.put(uniqueID, s);
+		sessionTable.put(uniqueID.trim(), s);
 		System.out.println("unique id generated is " + uniqueID);
 		return uniqueID;
 		

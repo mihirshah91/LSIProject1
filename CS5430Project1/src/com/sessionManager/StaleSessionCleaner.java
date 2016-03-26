@@ -10,6 +10,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import com.session.RPC.RPCServer;
 import com.sessionModel.SessionModel;
 
 /**
@@ -41,7 +42,11 @@ public class StaleSessionCleaner implements ServletContextListener {
 		
 		TimerTask timerTask = new GarbageCollector();
 		Timer timer = new Timer();
-		timer.schedule(timerTask,delay*1000,timeInterval*1000);
+		//timer.schedule(timerTask,delay*1000,timeInterval*1000);
+		
+		
+		RPCServer server = new RPCServer();
+		server.start();
 		
 	}
 
