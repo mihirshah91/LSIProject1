@@ -14,7 +14,7 @@ import com.sessionModel.SessionModel;
 
 public class RPCClientThread extends Thread {
 
-	List<String> dest = new ArrayList<String>(Arrays.asList("loalhost", "localhost2"));
+	
 
 	RPCClient client;
 	String id;
