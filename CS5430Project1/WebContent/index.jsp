@@ -1,3 +1,4 @@
+<%@page import="com.sessionManager.Constants"%>
 <%@page import="com.sessionManager.SessionManagerServlet"%>
 <%@page import="com.sessionModel.SessionModel"%>
 <%@page import="com.sessionManager.SessionManager"%>
@@ -61,9 +62,11 @@ boolean sessionFound = false;
 			if(c.getName().equals("CS5300Project1SessionId"))
 			{
 				String cookieValue = c.getValue();
-				int index = cookieValue.indexOf("_");
-				sessionId = cookieValue.substring(0, index);
-				SessionModel sessionObj = s.retrieveSession(sessionId);
+				/* int index = cookieValue.indexOf("_");
+				sessionId = cookieValue.substring(0, index); */
+				String splitData[] = cookieValue.split("_");
+				
+				SessionModel sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITER + splitData[1]);
 				if(sessionObj!=null)
 				{
 				versionNumber = sessionObj.getVersionNumber();

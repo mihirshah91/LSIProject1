@@ -6,5 +6,5 @@ public interface Constants {
 	 int SESSIONREAD = 1;
 	 int SESSIONWRITE = 2;
 	 String DEFAULTMESSAGE = "HELLO USER";
-	
+	 String DEFAULTVERSIONNUMBER = "1";
 }

@@ -42,7 +42,7 @@ public class RPCServer extends Thread {
 			s.setExpiryTime(cal.getTime());
 
 			s.setVersionNumber(version + 1);
-			sessionTable.put(sessionId, s);
+			sessionTable.put(sessionId +Constants.DELIMITER + s.getVersionNumber() , s);
 
 			SimpleDateFormat sdfr = new SimpleDateFormat();
 
@@ -61,7 +61,7 @@ public class RPCServer extends Thread {
 			ses.setExpiryTime(cal.getTime());
 			String outputString =callId + Constants.DELIMITER + sessionId.trim()+Constants.DELIMITER+"1"+ Constants.DELIMITER+
 					sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
-			sessionTable.put(sessionId.trim(), ses);
+			sessionTable.put(sessionId.trim()+ Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER, ses);
 			
 			return outputString.getBytes();
 		}
