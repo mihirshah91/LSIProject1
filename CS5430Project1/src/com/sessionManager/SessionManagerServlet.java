@@ -59,8 +59,12 @@ public class SessionManagerServlet extends HttpServlet {
 			if(c.getName().equals("CS5300Project1SessionId"))
 			{
 				String cookieValue = c.getValue();
-				int index = cookieValue.indexOf("_");
-				sessionId = cookieValue.substring(0, index);
+				/*int index = cookieValue.indexOf("_");
+				sessionId = cookieValue.substring(0, index);*/
+				String tempData[] = cookieValue.split(Constants.DELIMITER);
+				sessionId = tempData[0] + Constants.DELIMITERVERSION + tempData[1]; 
+				
+				
 				message = request.getParameter("userMessage");
 			
 

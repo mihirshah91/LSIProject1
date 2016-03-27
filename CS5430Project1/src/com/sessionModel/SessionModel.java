@@ -13,13 +13,22 @@ public class SessionModel {
 	public String sessionId;
 	public String message;
 	public Date expiryTime;
+	public String locationMetadata;
 	
-	public Date getExpiryTime() {
-		return expiryTime;
+	
+	
+	public String getLocationMetadata() {
+		return locationMetadata;
 	}
 
 
+	public void setLocationMetadata(String locationMetadata) {
+		this.locationMetadata = locationMetadata;
+	}
 
+	public Date getExpiryTime() {
+		return expiryTime;
+	}
 
 	public void setExpiryTime(Date expiryTime) {
 		this.expiryTime = expiryTime;

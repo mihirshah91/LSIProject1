@@ -14,13 +14,15 @@ import com.sessionModel.SessionModel;
 
 public class RPCServer extends Thread {
 
-	int portProj1bRPC = 1234;
+	int portProj1bRPC = 1800;
 	int maxPacketSize = 512;
 	DatagramSocket rpcSocket = null;
 
 	public RPCServer() {
 		try {
+			System.out.println("Constructor called");
 			rpcSocket = new DatagramSocket(portProj1bRPC);
+			System.out.println("rpcSocket=" + rpcSocket);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,7 +44,14 @@ public class RPCServer extends Thread {
 			s.setExpiryTime(cal.getTime());
 
 			s.setVersionNumber(version + 1);
-			sessionTable.put(sessionId +Constants.DELIMITER + s.getVersionNumber() , s);
+			
+			String tempid = s.getSessionId();
+			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
+			
+			String tempnewkey = tempSplitData[0] +Constants.DELIMITERVERSION + s.getVersionNumber() ;
+			System.out.println("new key= " + tempnewkey);
+			
+			sessionTable.put(tempnewkey , s);
 
 			SimpleDateFormat sdfr = new SimpleDateFormat();
 
@@ -61,7 +70,7 @@ public class RPCServer extends Thread {
 			ses.setExpiryTime(cal.getTime());
 			String outputString =callId + Constants.DELIMITER + sessionId.trim()+Constants.DELIMITER+"1"+ Constants.DELIMITER+
 					sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
-			sessionTable.put(sessionId.trim()+ Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER, ses);
+			sessionTable.put(sessionId.trim(), ses);
 			
 			return outputString.getBytes();
 		}
@@ -77,7 +86,7 @@ public class RPCServer extends Thread {
 				byte[] inBuf = new byte[maxPacketSize];
 				DatagramPacket receivedPacket = new DatagramPacket(inBuf, inBuf.length);
 				
-				
+			
 				rpcSocket.receive(receivedPacket);
 				InetAddress returnAddr = receivedPacket.getAddress();
 				int returnPort = receivedPacket.getPort();
@@ -92,11 +101,18 @@ public class RPCServer extends Thread {
 
 				case Constants.SESSIONREAD:
 				{// SessionRead accepts call args and returns call results
-					System.out.println("inside switch statement");
+					System.out.println("inside sesison read switch statement");
 					outBuf = sessionRead(splitData[0], splitData[2]);
 					break;
 
 				}
+				
+				case Constants.SESSIONWRITE:
+				{
+					System.out.println("inside sesison write switch statement");
+					
+				}
+				
 				}
 				// here outBuf should contain the callID and results of the call
 				DatagramPacket sendPkt;

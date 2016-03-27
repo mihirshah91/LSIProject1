@@ -21,7 +21,9 @@ public class RPCClientThread extends Thread {
 	int opcode;
 	int localNumber;
 	String host;
-
+	static int WQAcks;
+	
+	
 	SessionModel session;
 
 	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname) {
@@ -46,6 +48,7 @@ public class RPCClientThread extends Thread {
 			byte[] outBuf = new byte[client.maxPacketSize];
 
 			System.out.println("inside client thread");
+			System.out.println();
 			String sendData = localNumber + "_" + opcode + "_" + id;
 			outBuf = sendData.getBytes();
 			clientSocket = new DatagramSocket();
@@ -70,7 +73,11 @@ public class RPCClientThread extends Thread {
 				System.out.println("caliid=" + callidReturned);
 
 			} while (callidReturned != localNumber);
-
+			
+			WQAcks++;
+			if(WQAcks <= Constants.WQ )
+				RPCClient.locationMetdata = RPCClient.locationMetdata + host;
+			
 		//	synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null) {
 					// deserialize and make the seesion object;

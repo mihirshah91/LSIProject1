@@ -1,7 +1,9 @@
+<%@page import="com.session.RPC.RPCClient"%>
 <%@page import="com.sessionManager.Constants"%>
 <%@page import="com.sessionManager.SessionManagerServlet"%>
 <%@page import="com.sessionModel.SessionModel"%>
-<%@page import="com.sessionManager.SessionManager"%>
+
+
 <%@ page import="java.io.*,java.util.*" %>
 
 
@@ -66,12 +68,13 @@ boolean sessionFound = false;
 				sessionId = cookieValue.substring(0, index); */
 				String splitData[] = cookieValue.split("_");
 				
-				SessionModel sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITER + splitData[1]);
+				SessionModel sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
 				if(sessionObj!=null)
 				{
 				versionNumber = sessionObj.getVersionNumber();
 				message = sessionObj.getMessage();
-				cookie = sessionId + "_" + versionNumber + "_s1";
+				
+				cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER + splitData[2];
 				expiryTime = sessionObj.getExpiryTime();
 				sessionFound = true;
 				}
@@ -86,8 +89,8 @@ boolean sessionFound = false;
 	if(!sessionFound)
 	{
 		String sessionID = s.getUniqueId();
-		s.createSession(sessionID, request);
-		String temp = sessionID + "_1_s1" ;
+		s.createSession(sessionID + Constants.DELIMITERVERSION + Constants.DEFAULTVERSIONNUMBER , request);
+		String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + RPCClient.locationMetdata ;
 		
 		Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId",temp);
 		sessionIdCookie.setMaxAge(expiryTimeinSec);
