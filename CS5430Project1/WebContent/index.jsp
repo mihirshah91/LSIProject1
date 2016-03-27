@@ -28,7 +28,7 @@
    
    // Initializing variables which are displayed on screen for first request of new session
    
-   public void initialize(String id)
+   public void initialize(String id,String cookieTemp)
    {
 	   sessionId=id;
   		versionNumber=1;
@@ -37,7 +37,7 @@
 		cal.add(Calendar.SECOND,expiryTimeinSec);
 		
   		expiryTime = cal.getTime();
-  		cookie=id + "_1" + "_s1" ;
+  		cookie= cookieTemp;
    }
    
    
@@ -90,12 +90,12 @@ boolean sessionFound = false;
 	{
 		String sessionID = s.getUniqueId();
 		s.createSession(sessionID + Constants.DELIMITERVERSION + Constants.DEFAULTVERSIONNUMBER , request);
-		String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + RPCClient.locationMetdata ;
+		String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + Constants.DELIMITER + RPCClient.locationMetdata ;
 		
 		Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId",temp);
 		sessionIdCookie.setMaxAge(expiryTimeinSec);
 		response.addCookie(sessionIdCookie);
-		initialize(sessionID);
+		initialize(sessionID,temp);
 	}
 	
 	
