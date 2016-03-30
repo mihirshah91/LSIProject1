@@ -58,6 +58,8 @@ response.setHeader("Pragma", "no-cache");
 
 boolean sessionFound = false;
 
+	if(cookies!=null)
+	 {	
 		for(Cookie c: cookies)
 		{
 			System.out.println("cookie " + c.getName());
@@ -67,8 +69,25 @@ boolean sessionFound = false;
 				/* int index = cookieValue.indexOf("_");
 				sessionId = cookieValue.substring(0, index); */
 				String splitData[] = cookieValue.split("_");
+				SessionModel sessionObj = null;
 				
-				SessionModel sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+				
+				String type = (String) request.getAttribute("type");
+				System.out.println("type in jsp=" + type);
+				
+				if(type==null)
+					
+					{
+					
+					sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+					}
+				else
+				{
+					int temp  = Integer.parseInt(splitData[1]);
+					System.out.println("inside type=replcae");
+					sessionObj = SessionManagerServlet.sessionTable.get(splitData[0] + Constants.DELIMITERVERSION + String.valueOf(temp));
+				}
+							
 				if(sessionObj!=null)
 				{
 				versionNumber = sessionObj.getVersionNumber();
@@ -84,7 +103,7 @@ boolean sessionFound = false;
 			
 		}
 	
-	
+	}
 	
 	if(!sessionFound)
 	{

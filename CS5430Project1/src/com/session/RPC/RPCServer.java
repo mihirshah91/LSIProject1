@@ -77,6 +77,47 @@ public class RPCServer extends Thread {
 		//return null;
 	}
 
+	
+	
+	
+	
+	public byte[] sessionWrite(String callId, String sessionId,String message)
+	{
+		Map<String, SessionModel> sessionTable = SessionManagerServlet.sessionTable;
+		SessionModel s = SessionManagerServlet.sessionTable.get(sessionId.trim());
+		
+		if (s != null) {
+			int version = s.getVersionNumber();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+			s.setExpiryTime(cal.getTime());
+			s.setVersionNumber(version + 1);
+			s.setMessage(message);
+			String tempid = s.getSessionId();
+			
+			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
+			String tempnewkey = tempSplitData[0] +Constants.DELIMITERVERSION + s.getVersionNumber() ;
+			
+			System.out.println("new key= " + tempnewkey);
+			sessionTable.put(tempnewkey , s);
+
+			SimpleDateFormat sdfr = new SimpleDateFormat();
+			String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
+					+ Constants.DELIMITER + sdfr.format(s.expiryTime) + Constants.DELIMITER + s.message;
+
+			return data.getBytes();
+			
+	}
+		
+		String data="";
+		return data.getBytes();
+		
+	}
+	
+	
+	
+	
 	public void run() {
 
 		while (true) {
@@ -110,6 +151,7 @@ public class RPCServer extends Thread {
 				case Constants.SESSIONWRITE:
 				{
 					System.out.println("inside sesison write switch statement");
+					outBuf = sessionWrite(splitData[0], splitData[2], splitData[3]);
 					
 				}
 				

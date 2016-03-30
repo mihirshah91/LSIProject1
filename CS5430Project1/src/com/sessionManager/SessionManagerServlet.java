@@ -76,7 +76,9 @@ public class SessionManagerServlet extends HttpServlet {
 			//call replace method only if sessionid found else ignore - this can happen if session is expired and refresh is called
 			if(sessionId!="")
 				replace(sessionId,message);
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			request.setAttribute("type", "replace");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+
 		}
 		else if(request.getParameter("refreshButton")!=null)
 		{
@@ -108,7 +110,8 @@ public class SessionManagerServlet extends HttpServlet {
 	
 	public void refresh(String sessionId)
 	{
-		System.out.println("Refresh Method called");
+		//RPCClient c = new RPCClient();
+		//SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
 	}
 	
 	
@@ -119,9 +122,14 @@ public class SessionManagerServlet extends HttpServlet {
 	{
 		
 		System.out.println("Replace method called");
-		SessionModel s = sessionTable.get(sessionId);
+		RPCClient c = new RPCClient();
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONWRITE,message);
+		/*SessionModel s = sessionTable.get(sessionId);
 		s.setMessage(message);
-		sessionTable.put(sessionId, s);
+		sessionTable.put(sessionId, s);*/
+		
+		
+		
 		
 		
 		
@@ -156,13 +164,12 @@ public class SessionManagerServlet extends HttpServlet {
 		System.out.println("inside retrieve sesison");
 		RPCClient c = new RPCClient();
 		
-		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD);
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD,"");
 		if(s!=null)
 			return s;
 	
 		
 		return null;
-		
 	}
 	
 	/*
@@ -183,21 +190,9 @@ public class SessionManagerServlet extends HttpServlet {
 	{
 		System.out.println("inside create session");
 		System.out.println("sessionTable= " +sessionTable);
-		//String uniqueID = UUID.randomUUID().toString();
 		
-		//long requestDate = request.getDateHeader("If-Modified-Since");
-		
-	/*	Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND,expiryTimeinSec);
-		
-		
-		
-		
-		SessionModel s = new SessionModel(uniqueID, 1,"Hello user");
-		s.setExpiryTime(cal.getTime());
-		sessionTable.put(uniqueID.trim(), s);*/
 		RPCClient c = new RPCClient();
-		SessionModel s = c.sendRequest(uniqueID, Constants.SESSIONREAD);
+		SessionModel s = c.sendRequest(uniqueID, Constants.SESSIONREAD,"");
 		System.out.println("unique id generated is " + uniqueID);
 		return uniqueID;
 		
