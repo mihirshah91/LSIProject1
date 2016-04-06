@@ -4,10 +4,10 @@
 <%@page import="com.sessionModel.SessionModel"%>
 
 
-<%@ page import="java.io.*,java.util.*" %>
+<%@ page import="java.io.*,java.util.*"%>
 
 
- 
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15,139 +15,145 @@
 </head>
 <body>
 
-<%-- Declaring general variables used for display on page --%>
+	<%-- Declaring general variables used for display on page --%>
 
-<%!				              
-   String sessionId;
-   int versionNumber;
-   String message;
-   String cookie;
-   int expiryTimeinSec = 180; // always in seconds
-   Date expiryTime;
- 
-   
-   // Initializing variables which are displayed on screen for first request of new session
-   
-   public void initialize(String id,String cookieTemp)
-   {
-	   sessionId=id;
-  		versionNumber=1;
-  		message = "Hello user";
-  		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND,expiryTimeinSec);
-		
-  		expiryTime = cal.getTime();
-  		cookie= cookieTemp;
-   }
-   
-   
-%>
- 
- <%-- Below code identifies if the cookie is set in request or not.
+	<%!String sessionId;
+	int versionNumber;
+	String message;
+	String cookie;
+	int expiryTimeinSec = 180; // always in seconds
+	Date expiryTime;
+
+	// Initializing variables which are displayed on screen for first request of new session
+
+	public void initialize(String id, String cookieTemp) {
+		sessionId = id;
+		versionNumber = 1;
+		message = "Hello user";
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, expiryTimeinSec);
+
+		expiryTime = cal.getTime();
+		cookie = cookieTemp;
+	}%>
+
+	<%-- Below code identifies if the cookie is set in request or not.
  	  If not then create the session, seth the cookie in response with expiry time
  	  If found, then update the seeion parameters	
   --%>
- 
-<% Cookie[] cookies= request.getCookies();
-SessionManagerServlet s= new SessionManagerServlet();
-response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
-response.setHeader("Pragma", "no-cache");
-//response.setDateHeader("Expires", -1);
-//response.setDateHeader("Last-Modified", new Date().getTime());
 
+	<%
+		Cookie[] cookies = request.getCookies();
+		SessionManagerServlet s = new SessionManagerServlet();
+		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		//response.setDateHeader("Expires", -1);
+		//response.setDateHeader("Last-Modified", new Date().getTime());
 
-boolean sessionFound = false;
+		boolean sessionFound = false;
 
-	if(cookies!=null)
-	 {	
-		for(Cookie c: cookies)
-		{
-			System.out.println("cookie " + c.getName());
-			if(c.getName().equals("CS5300Project1SessionId"))
-			{
-				String cookieValue = c.getValue();
-				/* int index = cookieValue.indexOf("_");
-				sessionId = cookieValue.substring(0, index); */
-				String splitData[] = cookieValue.split("_");
-				SessionModel sessionObj = null;
-				
-				
-				String type = (String) request.getAttribute("type");
-				System.out.println("type in jsp=" + type);
-				
-				if(type==null)
-					
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				System.out.println("cookie " + c.getName());
+				if (c.getName().equals("CS5300Project1SessionId")) {
+					String cookieValue = c.getValue();
+					/* int index = cookieValue.indexOf("_");
+					sessionId = cookieValue.substring(0, index); */
+					String splitData[] = cookieValue.split("_");
+					SessionModel sessionObj = null;
+
+					String type = (String) request.getAttribute("type");
+					System.out.println("type in jsp=" + type);
+
+					if (type == null)
+
 					{
-					
-					sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+
+						sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+					} else
+
+					{
+						int temp = Integer.parseInt(splitData[1]);
+						System.out.println("inside type=replcae");
+						sessionObj = SessionManagerServlet.sessionTable
+								.get(splitData[0] + Constants.DELIMITERVERSION + String.valueOf(temp));
 					}
-				else
-				{
-					int temp  = Integer.parseInt(splitData[1]);
-					System.out.println("inside type=replcae");
-					sessionObj = SessionManagerServlet.sessionTable.get(splitData[0] + Constants.DELIMITERVERSION + String.valueOf(temp));
+
+					if (sessionObj != null) {
+						versionNumber = sessionObj.getVersionNumber();
+						message = sessionObj.getMessage();
+
+						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
+								+ splitData[2];
+						expiryTime = sessionObj.getExpiryTime();
+						sessionFound = true;
+					}
+
 				}
-							
-				if(sessionObj!=null)
-				{
-				versionNumber = sessionObj.getVersionNumber();
-				message = sessionObj.getMessage();
-				
-				cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER + splitData[2];
-				expiryTime = sessionObj.getExpiryTime();
-				sessionFound = true;
-				}
-				
-				
+
 			}
-			
+
 		}
-	
-	}
-	
-	if(!sessionFound)
-	{
-		String sessionID = s.getUniqueId();
-		s.createSession(sessionID + Constants.DELIMITERVERSION + Constants.DEFAULTVERSIONNUMBER , request);
-		String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + Constants.DELIMITER + RPCClient.locationMetdata ;
-		
-		Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId",temp);
-		sessionIdCookie.setMaxAge(expiryTimeinSec);
-		response.addCookie(sessionIdCookie);
-		initialize(sessionID,temp);
-	}
-	
-	
-%> 
+
+		if (!sessionFound) {
+			String sessionID = s.getUniqueId();
+			s.createSession(sessionID + Constants.DELIMITERVERSION + Constants.DEFAULTVERSIONNUMBER, request);
+			String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + Constants.DELIMITER
+					+ RPCClient.locationMetdata;
+
+			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
+			sessionIdCookie.setMaxAge(expiryTimeinSec);
+			response.addCookie(sessionIdCookie);
+			initialize(sessionID, temp);
+		}
+	%>
 
 
 
 
-Net id:mgs275  &nbsp;&nbsp;  Session : <% out.print(sessionId); %>
+	Net id:mgs275 &nbsp;&nbsp; Session :
+	<%
+		out.print(sessionId);
+	%>
 
 
-&nbsp;&nbsp; Version:<% out.print(versionNumber); %> &nbsp;&nbsp;
+	&nbsp;&nbsp; Version:<%
+		out.print(versionNumber);
+	%>
+	&nbsp;&nbsp;
 
-<%=new java.util.Date() %>
+	<%=new java.util.Date()%>
 
-<br/> <br/>
-
-
-<form action="${pageContext.request.contextPath}/SessionManagerServlet" method="post">
-
-<p> <% out.print(message); %> </p>
-
-<input type="submit" name="replaceButton" value="Replace"></input>  &nbsp;&nbsp; <input type="text" name="userMessage" value="" required="required" maxLength="512"></input>  <br/>
-<input type="submit" name="refreshButton" value="Refresh" formnovalidate></input> <br/>
-<input type="submit" name="logoutButton" value="Logout" formnovalidate></input> <br/>
+	<br />
+	<br />
 
 
-</form>
+	<form action="${pageContext.request.contextPath}/SessionManagerServlet"
+		method="post">
 
-<br/> <br/>
-Cookie : <% out.print(cookie); %>  &nbsp;&nbsp; Expires :   
+		<p>
+			<%
+				out.print(message);
+			%>
+		</p>
 
-<%= expiryTime %>
+		<input type="submit" name="replaceButton" value="Replace"></input>
+		&nbsp;&nbsp; 
+		<input type="text" name="userMessage" value="" required="required" maxLength="512"></input> <br /> 
+		<input type="submit" name="refreshButton" value="Refresh" formnovalidate></input> <br /> 
+		<input type="submit" name="logoutButton" value="Logout" formnovalidate></input> <br />
+
+
+	</form>
+
+	<br />
+	<br /> Cookie :
+	<%
+		out.print(cookie);
+	%>
+	&nbsp;&nbsp; Expires :
+
+	<%=expiryTime%>
 
 </body>
 </html>

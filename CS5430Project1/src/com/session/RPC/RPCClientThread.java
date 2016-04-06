@@ -20,8 +20,8 @@ public class RPCClientThread extends Thread {
 	int localNumber;
 	String host;
 	static int WQAcks;
-	String message="";
-	
+	String message = "";
+
 	SessionModel session;
 
 	public void initialize() {
@@ -29,20 +29,18 @@ public class RPCClientThread extends Thread {
 	}
 
 	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname) {
-		
-		setCommon(rpc, id, opcode,hostname);
-		
+
+		setCommon(rpc, id, opcode, hostname);
+
 	}
 
-	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname,String message)
-	{
-		setCommon(rpc, id, opcode,hostname);
+	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname, String message) {
+		setCommon(rpc, id, opcode, hostname);
 		this.message = message;
-		
+
 	}
-	
-	public void setCommon(RPCClient rpc, String id, int opcode, String hostname)
-	{
+
+	public void setCommon(RPCClient rpc, String id, int opcode, String hostname) {
 		this.client = rpc;
 		rpc.callNumber++;
 		localNumber = rpc.callNumber;
@@ -50,7 +48,7 @@ public class RPCClientThread extends Thread {
 		this.opcode = opcode;
 		host = hostname;
 	}
-	
+
 	public RPCClientThread() {
 		// TODO Auto-generated constructor stub
 	}
@@ -63,7 +61,8 @@ public class RPCClientThread extends Thread {
 
 			System.out.println("inside client thread");
 			System.out.println();
-			String sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id + Constants.DELIMITER + message ;
+			String sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id
+					+ Constants.DELIMITER + message;
 			outBuf = sendData.getBytes();
 			clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName(host);
@@ -73,7 +72,7 @@ public class RPCClientThread extends Thread {
 			byte[] inBuf = new byte[client.maxPacketSize];
 			receivePacket = new DatagramPacket(inBuf, inBuf.length);
 
-			int callidReturned = 0;
+			int callidReturned = -1;
 			do {
 				System.out.println("inside do while client thread");
 				receivePacket.setLength(inBuf.length);
@@ -88,21 +87,25 @@ public class RPCClientThread extends Thread {
 
 			} while (callidReturned != localNumber);
 
-			WQAcks++;
-			
-			//synchronized (RPCClient.sessionObj ) {
+//			if (opcode == Constants.SESSIONLOGOUT) {
+//
+//			} else
+			{
+				WQAcks++;
+
+				// synchronized (RPCClient.sessionObj ) {
 
 				if (WQAcks <= Constants.WQ)
 					RPCClient.locationMetdata = RPCClient.locationMetdata + host;
-			
 
-			// synchronized (RPCClient.sessionObj) {
-			if (RPCClient.sessionObj == null) {
-				
-				String data = new String(receivePacket.getData());
-				String splitData[] = data.split(Constants.DELIMITER);
-				RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
+				// synchronized (RPCClient.sessionObj) {
+				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
 
+					String data = new String(receivePacket.getData());
+					String splitData[] = data.split(Constants.DELIMITER);
+					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
+
+				}
 			}
 
 			// }

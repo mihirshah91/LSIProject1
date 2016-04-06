@@ -8,7 +8,7 @@ public interface Constants {
 	 int SESSIONWRITE = 2;
 	 String DEFAULTMESSAGE = "HELLO USER";
 	 String DEFAULTVERSIONNUMBER = "1";
-	
+	 int SESSIONLOGOUT = 3; 
 	 int F = 1;
 	 int R =  F + 1;
 	 int WQ = F + 1;

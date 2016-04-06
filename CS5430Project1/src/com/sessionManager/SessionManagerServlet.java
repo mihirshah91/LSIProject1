@@ -22,13 +22,16 @@ import com.sessionModel.SessionModel;
  * Servlet implementation class SessionManagerServlet.
  * It has doPost method implemented and also helper methods
  */
+
+//TODO 
+// Add cookie back to each response
 @WebServlet("/SessionManagerServlet")
 public class SessionManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String,SessionModel> sessionTable =new ConcurrentHashMap<String,SessionModel>();
     public int expiryTimeinSec = 180; // always written in seconds   
 	
-	
+	Cookie sessionCookie ;
     public SessionManagerServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -37,6 +40,7 @@ public class SessionManagerServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		doPost(request, response);
 	}
 
 	
@@ -56,17 +60,17 @@ public class SessionManagerServlet extends HttpServlet {
 		
 		for(Cookie c: cookies)
 		{
+			
 			if(c.getName().equals("CS5300Project1SessionId"))
 			{
 				String cookieValue = c.getValue();
 				/*int index = cookieValue.indexOf("_");
 				sessionId = cookieValue.substring(0, index);*/
 				String tempData[] = cookieValue.split(Constants.DELIMITER);
-				sessionId = tempData[0] + Constants.DELIMITERVERSION + tempData[1]; 
-				
-				
+				sessionId = tempData[0] + Constants.DELIMITERVERSION + tempData[1];
 				message = request.getParameter("userMessage");
-			
+				sessionCookie = c;
+				break;
 
 			}
 		}
@@ -84,15 +88,26 @@ public class SessionManagerServlet extends HttpServlet {
 		{
 			//call refresh method
 			refresh(sessionId);
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			request.setAttribute("type", "refresh");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			
 		}
 		else if(request.getParameter("logoutButton")!=null)
 
 		{
 			//call logout method
+			request.setAttribute("type", "logout");
 			logout(sessionId);
-			response.sendRedirect(request.getContextPath() + "/logout.html");
+			sessionCookie.setMaxAge(0);
+			response.addCookie(sessionCookie);
+			request.getRequestDispatcher( "/logout.html").forward(request, response);
+		}else{
+			if( sessionId != null && sessionId!="")
+				refresh(sessionId);
+			request.setAttribute("type", "refresh");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			
+			
 		}
 			
 		
@@ -110,8 +125,8 @@ public class SessionManagerServlet extends HttpServlet {
 	
 	public void refresh(String sessionId)
 	{
-		//RPCClient c = new RPCClient();
-		//SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
+		RPCClient c = new RPCClient();
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
 	}
 	
 	
