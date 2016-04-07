@@ -96,7 +96,7 @@ public class RPCClientThread extends Thread {
 				// synchronized (RPCClient.sessionObj ) {
 
 				if (WQAcks <= Constants.WQ)
-					RPCClient.locationMetdata = RPCClient.locationMetdata + host;
+					RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + host;
 
 				// synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
