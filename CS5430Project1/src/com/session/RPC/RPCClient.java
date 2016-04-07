@@ -18,7 +18,7 @@ public class RPCClient {
 	int portProj1bRPC = 1800;
 	int maxPacketSize = 512;
 	static int callNumber = 0;
-	static SessionModel sessionObj = null;
+	public static SessionModel sessionObj = null;
 	public static String locationMetdata = "";
 
 	public SessionModel sendRequest(String id, int opcode, String message) {

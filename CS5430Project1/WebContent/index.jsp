@@ -106,6 +106,7 @@
 			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
 			sessionIdCookie.setMaxAge(expiryTimeinSec);
 			response.addCookie(sessionIdCookie);
+			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);
 		}
 	%>
