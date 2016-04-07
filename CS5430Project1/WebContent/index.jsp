@@ -84,7 +84,7 @@
 						message = sessionObj.getMessage();
 
 						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
-								+ splitData[2];
+								+ splitData[2] + RPCClient.locationMetdata ;
 						expiryTime = sessionObj.getExpiryTime();
 						sessionFound = true;
 					}
