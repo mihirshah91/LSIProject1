@@ -9,7 +9,7 @@ import com.sessionModel.SessionModel;
 
 public class RPCClient {
 
-	List<String> dest = new ArrayList<String>(Arrays.asList("localhost")); // list
+	List<String> dest = new ArrayList<String>(Arrays.asList("10.132.2.77","10.148.3.215")); // list
 																			// of
 																			// ips
 																			// of
@@ -26,6 +26,7 @@ public class RPCClient {
 		try {
 			sessionObj = null;
 			locationMetdata = "";
+			RPCClientThread.WQAcks = 0;
 			System.out.println("SESSION ID : " + id);
 			for (int i = 0; i < dest.size(); i++) {
 
@@ -39,7 +40,7 @@ public class RPCClient {
 
 				}
 
-				thread.initialize();
+				//thread.initialize();
 				// RPCClientThread thread = new RPCClientThread();
 				thread.start();
 				thread.join();

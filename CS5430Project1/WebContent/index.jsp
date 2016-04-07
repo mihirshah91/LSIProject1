@@ -23,6 +23,7 @@
 	String cookie;
 	int expiryTimeinSec = 180; // always in seconds
 	Date expiryTime;
+	String serverId;
 
 	// Initializing variables which are displayed on screen for first request of new session
 
@@ -86,6 +87,7 @@
 						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
 								+ splitData[2] + RPCClient.locationMetdata ;
 						expiryTime = sessionObj.getExpiryTime();
+						serverId = sessionObj.getIntialserverId();
 						sessionFound = true;
 					}
 
@@ -154,6 +156,10 @@
 	&nbsp;&nbsp; Expires :
 
 	<%=expiryTime%>
+
+Session found server :
+<%  serverId  %>
+
 
 </body>
 </html>

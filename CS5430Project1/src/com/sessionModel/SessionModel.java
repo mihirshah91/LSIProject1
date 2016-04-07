@@ -13,17 +13,16 @@ public class SessionModel {
 	public String sessionId;
 	public String message;
 	public Date expiryTime;
-	public String locationMetadata;
+	public String intialserverId;
 	
 	
 	
-	public String getLocationMetadata() {
-		return locationMetadata;
+	public String getIntialserverId() {
+		return intialserverId;
 	}
 
-
-	public void setLocationMetadata(String locationMetadata) {
-		this.locationMetadata = locationMetadata;
+	public void setIntialserverId(String intialserverId) {
+		this.intialserverId = intialserverId;
 	}
 
 	public Date getExpiryTime() {
@@ -50,12 +49,13 @@ public class SessionModel {
 	public int versionNumber;
 	
 	
-	public SessionModel(String id, int version,String message )
+	public SessionModel(String id, int version,String message)
 
 	{
 		this.sessionId = id;
 		this.versionNumber = version;
 		this.message = message;
+		
 		
 	}
 	
