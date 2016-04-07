@@ -24,8 +24,8 @@ import com.sessionModel.SessionModel;
 @WebListener
 public class StaleSessionCleaner implements ServletContextListener {
 
-	long timeInterval = 60; // in seconds - time interval after which it should be run
-	long delay = 180;  // in seconds initial delay in seconds
+	long timeInterval = 15; // in seconds - time interval after which it should be run
+	long delay = 15;  // in seconds initial delay in seconds
 	
 	
 	@Override

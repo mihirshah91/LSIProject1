@@ -9,7 +9,7 @@ import com.sessionModel.SessionModel;
 
 public class RPCClient {
 
-	List<String> dest = new ArrayList<String>(Arrays.asList("10.132.2.77","10.148.3.215")); // list
+	List<String> dest = new ArrayList<String>(Arrays.asList("10.148.3.215","10.132.2.77")); // list
 																			// of
 																			// ips
 																			// of

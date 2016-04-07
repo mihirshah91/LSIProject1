@@ -1,7 +1,7 @@
 package com.sessionManager;
 
 public interface Constants {
-	 int EXPIRYTIME = 180; // in seconds
+	 int EXPIRYTIME = 30; // in seconds
 	 String DELIMITER = "_"; 
 	 String DELIMITERVERSION = "$";
 	 int SESSIONREAD = 1;
@@ -14,5 +14,6 @@ public interface Constants {
 	 int WQ = F + 1;
 	 int W = 2*F + 1;
 	 int N = W;
+	 int delta = 2 ; // extra seconds in discard time (delta)
 	 
 }

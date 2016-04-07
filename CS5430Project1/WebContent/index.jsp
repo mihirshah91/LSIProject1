@@ -21,7 +21,7 @@
 	int versionNumber;
 	String message;
 	String cookie;
-	int expiryTimeinSec = 180; // always in seconds
+	// always in seconds
 	Date expiryTime;
 	String serverId;
 
@@ -32,7 +32,7 @@
 		versionNumber = 1;
 		message = "Hello user";
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND, expiryTimeinSec);
+		cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
 
 		expiryTime = cal.getTime();
 		cookie = cookieTemp;
@@ -104,7 +104,7 @@
 					+ RPCClient.locationMetdata;
 
 			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
-			sessionIdCookie.setMaxAge(expiryTimeinSec);
+			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
 			response.addCookie(sessionIdCookie);
 			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);

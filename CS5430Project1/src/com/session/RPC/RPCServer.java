@@ -55,7 +55,7 @@ public class RPCServer extends Thread {
 			int version = s.getVersionNumber();
 			System.out.println("inside session read if loop");
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
 			s.setExpiryTime(cal.getTime());
 
 			s.setVersionNumber(version + 1);
@@ -77,7 +77,7 @@ public class RPCServer extends Thread {
 		} else {
 			// create session
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
 			SimpleDateFormat sdfr = new SimpleDateFormat();
 			SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello user");
 			ses.setExpiryTime(cal.getTime());
@@ -98,8 +98,9 @@ public class RPCServer extends Thread {
 			int version = s.getVersionNumber();
 
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
-			s.setExpiryTime(cal.getTime());
+			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
+			//cal.add(Calendar.SECOND, amount);
+			s.setExpiryTime(cal.getTime() );
 			s.setVersionNumber(version + 1);
 			s.setMessage(message);
 			String tempid = s.getSessionId();
@@ -164,6 +165,7 @@ public class RPCServer extends Thread {
 				}
 
 				}
+				
 				// here outBuf should contain the callID and results of the call
 				DatagramPacket sendPkt;
 				if (outBuf != null) {

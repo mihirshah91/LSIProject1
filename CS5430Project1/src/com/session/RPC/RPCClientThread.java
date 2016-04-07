@@ -96,7 +96,9 @@ public class RPCClientThread extends Thread {
 				WQAcks++;
 
 				// synchronized (RPCClient.sessionObj ) {
-
+				/*if(host.equals("10.132.2.77"))
+					sleep(3000);*/
+				
 				if (WQAcks <= Constants.WQ)
 				{
 					System.out.println("inside WQACK check");

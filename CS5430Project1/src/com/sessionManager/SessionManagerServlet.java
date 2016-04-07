@@ -150,29 +150,7 @@ public class SessionManagerServlet extends HttpServlet {
 		
 	}
 	
-	/*
-	 * updates the versionNumber and expiryTime for the corresponding sessionId
-	 */
-	
-	public SessionModel updateSesion(String sessionId)
-	{
-		SessionModel s = sessionTable.get(sessionId);
-		if(s!=null)
-		{
-		int version = s.getVersionNumber();
-		
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND,expiryTimeinSec);
-		s.setExpiryTime(cal.getTime());
-		
-		s.setVersionNumber(version+1);
-		sessionTable.put(sessionId, s);
-		
-		return s;
-		
-		}
-		return null;
-	}
+
 	
 	public SessionModel retrieveSession(String sessionId)
 	{
