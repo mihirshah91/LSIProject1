@@ -102,7 +102,7 @@ public class SessionManagerServlet extends HttpServlet {
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher( "/logout.html").forward(request, response);
 		}else{
-			if( sessionId == null && sessionId=="")
+			//if( sessionId == null && sessionId=="")
 				refresh(sessionId);
 			request.setAttribute("type", "refresh");
 			request.getRequestDispatcher("/index.jsp").forward(request, response);

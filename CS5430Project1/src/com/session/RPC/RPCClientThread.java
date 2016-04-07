@@ -25,7 +25,9 @@ public class RPCClientThread extends Thread {
 	SessionModel session;
 
 	public void initialize() {
+		
 		WQAcks = 0;
+		System.out.println("WQAcks ="  + WQAcks);
 	}
 
 	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname) {
@@ -96,8 +98,10 @@ public class RPCClientThread extends Thread {
 				// synchronized (RPCClient.sessionObj ) {
 
 				if (WQAcks <= Constants.WQ)
+				{
+					System.out.println("inside WQACK check");
 					RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + host;
-
+				}
 				// synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
 
