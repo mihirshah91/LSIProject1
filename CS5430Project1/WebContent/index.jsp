@@ -158,7 +158,7 @@
 	<%=expiryTime%>
 
 Session found server :
-<%  serverId  %>
+<%=serverId  %>
 
 
 </body>
