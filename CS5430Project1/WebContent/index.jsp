@@ -87,7 +87,7 @@
 						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
 								+ splitData[2] + RPCClient.locationMetdata ;
 						expiryTime = sessionObj.getExpiryTime();
-						serverId = sessionObj.getIntialserverId();
+						serverId = RPCClient.sessionObj.getIntialserverId();
 						sessionFound = true;
 					}
 
