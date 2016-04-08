@@ -8,7 +8,7 @@ public interface Constants {
 	 int SESSIONWRITE = 2;
 	 String DEFAULTMESSAGE = "HELLO USER";
 	 String DEFAULTVERSIONNUMBER = "1";
-	 String dateFormat = "dd MM yyyy hh:mm:ss";
+	 String dateFormat = "dd-M-yyyy hh:mm:ss";
 	 int SESSIONLOGOUT = 3; 
 	 int F = 1;
 	 int R =  F + 1;
