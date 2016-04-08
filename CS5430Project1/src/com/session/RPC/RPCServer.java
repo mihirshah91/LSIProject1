@@ -79,7 +79,7 @@ public class RPCServer extends Thread {
 			// create session
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
-			SimpleDateFormat sdfr = new SimpleDateFormat();
+			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 			SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello user");
 			ses.setExpiryTime(cal.getTime());
 			String outputString = callId + Constants.DELIMITER + sessionId.trim() + Constants.DELIMITER + "1"
@@ -112,7 +112,7 @@ public class RPCServer extends Thread {
 			//System.out.println("new key= " + tempnewkey);
 			sessionTable.put(s.getSessionId(), s);
 
-			SimpleDateFormat sdfr = new SimpleDateFormat();
+			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 			String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
 					+ Constants.DELIMITER + sdfr.format(s.expiryTime) + Constants.DELIMITER + s.message;
 
