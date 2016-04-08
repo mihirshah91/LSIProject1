@@ -14,7 +14,7 @@ import com.sessionModel.SessionModel;
 
 public class RPCServer extends Thread {
 
-	int portProj1bRPC = 1800;
+	int portProj1bRPC = 1900;
 	int maxPacketSize = 512;
 	DatagramSocket rpcSocket = null;
 
