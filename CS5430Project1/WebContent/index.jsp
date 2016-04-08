@@ -101,7 +101,7 @@
 
 		if (!sessionFound) {
 			String sessionID = s.getUniqueId();
-			s.createSession(sessionID + Constants.DELIMITERVERSION + Constants.DEFAULTVERSIONNUMBER, request);
+			s.createSession(sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER, request);
 			String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + Constants.DELIMITER
 					+ RPCClient.locationMetdata;
 
