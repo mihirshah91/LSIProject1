@@ -63,7 +63,8 @@ public class RPCServer extends Thread {
 			String tempid = s.getSessionId();
 			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
 
-			String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
+			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
+			String tempnewkey = tempSplitData[0] ;
 			System.out.println("new key= " + tempnewkey);
 
 			sessionTable.put(tempnewkey, s);
@@ -106,8 +107,8 @@ public class RPCServer extends Thread {
 			String tempid = s.getSessionId();
 
 			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
-			String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
-
+			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
+			String tempnewkey = tempSplitData[0] ;
 			System.out.println("new key= " + tempnewkey);
 			sessionTable.put(tempnewkey, s);
 
