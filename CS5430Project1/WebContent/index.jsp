@@ -79,7 +79,7 @@
 						int temp = Integer.parseInt(splitData[1]);
 						System.out.println("inside type=replcae");
 						sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0] + Constants.DELIMITERVERSION + String.valueOf(temp));
+								.get(splitData[0]);
 					}
 
 					if (sessionObj != null) {
