@@ -68,7 +68,7 @@ public class RPCClientThread extends Thread {
 			outBuf = sendData.getBytes();
 			clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName(host);
-			DatagramPacket sendPkt = new DatagramPacket(outBuf, outBuf.length, IPAddress, client.portProj1bRPC);
+			DatagramPacket sendPkt = new DatagramPacket(outBuf, outBuf.length, IPAddress, Constants.RPC_PORT);
 			clientSocket.send(sendPkt);
 
 			byte[] inBuf = new byte[client.maxPacketSize];

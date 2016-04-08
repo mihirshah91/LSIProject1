@@ -14,14 +14,14 @@ import com.sessionModel.SessionModel;
 
 public class RPCServer extends Thread {
 
-	int portProj1bRPC = 1900;
+	int portProj1bRPC = 7111;
 	int maxPacketSize = 512;
 	DatagramSocket rpcSocket = null;
 
 	public RPCServer() {
 		try {
 			System.out.println("Constructor called");
-			rpcSocket = new DatagramSocket(portProj1bRPC);
+			rpcSocket = new DatagramSocket(Constants.RPC_PORT);
 			System.out.println("rpcSocket=" + rpcSocket);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
