@@ -64,10 +64,10 @@ public class RPCServer extends Thread {
 			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
 
 			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
-			String tempnewkey = tempSplitData[0] ;
-			System.out.println("new key= " + tempnewkey);
+			//String tempnewkey = tempSplitData[0] ;
+			//System.out.println("new key= " + tempnewkey);
 
-			sessionTable.put(tempnewkey, s);
+			sessionTable.put(s.getSessionId(), s);
 
 			SimpleDateFormat sdfr = new SimpleDateFormat();
 
@@ -108,9 +108,9 @@ public class RPCServer extends Thread {
 
 			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
 			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
-			String tempnewkey = tempSplitData[0] ;
-			System.out.println("new key= " + tempnewkey);
-			sessionTable.put(tempnewkey, s);
+			//String tempnewkey = tempSplitData[0] ;
+			//System.out.println("new key= " + tempnewkey);
+			sessionTable.put(s.getSessionId(), s);
 
 			SimpleDateFormat sdfr = new SimpleDateFormat();
 			String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
