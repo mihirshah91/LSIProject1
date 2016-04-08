@@ -67,19 +67,19 @@
 					String type = (String) request.getAttribute("type");
 					System.out.println("type in jsp=" + type);
 
-					/*if (type == null)
+					if (type == null)
 
 					{
 
 						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
 						sessionObj = s.retrieveSession(splitData[0]);
-					} else*/
+					} else
 
 					{
 						int temp = Integer.parseInt(splitData[1]);
 						System.out.println("inside type=replcae");
 						sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0] + Constants.DELIMITERVERSION + String.valueOf(temp));
+								.get(splitData[0]);
 					}
 
 					if (sessionObj != null) {
