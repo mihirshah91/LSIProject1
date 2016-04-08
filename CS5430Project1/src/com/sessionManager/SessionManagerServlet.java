@@ -158,7 +158,7 @@ public class SessionManagerServlet extends HttpServlet {
 		String sessionId = null;
 		try {
 
-			BufferedReader br = new BufferedReader(new FileReader(Constants.filePath));
+			BufferedReader br = new BufferedReader(new FileReader(Constants.LOCALDATA_PATH));
 
 			sessionId = br.readLine();
 			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() + String.valueOf(++sessionNumber);
