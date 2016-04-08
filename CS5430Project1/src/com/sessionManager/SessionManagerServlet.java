@@ -84,12 +84,15 @@ public class SessionManagerServlet extends HttpServlet {
 			if (sessionId != "")
 				replace(sessionId, message);
 			request.setAttribute("type", "replace");
+			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			
 
 		} else if (request.getParameter("refreshButton") != null) {
 			// call refresh method
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
+			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		} else if (request.getParameter("logoutButton") != null)
@@ -105,6 +108,7 @@ public class SessionManagerServlet extends HttpServlet {
 			// if( sessionId == null && sessionId=="")
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
+			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		}
