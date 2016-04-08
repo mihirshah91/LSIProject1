@@ -20,7 +20,7 @@ public class RPCClient {
 	List<String> dest = new ArrayList<String>(Arrays.asList("10.132.2.77")); 
 	
 	Map<String,String> serverMap = new LinkedHashMap<>();
-	int portProj1bRPC = 7111;
+	//int portProj1bRPC = 7111;
 	int maxPacketSize = 512;
 	static int callNumber = 0;
 	public static SessionModel sessionObj = null;
