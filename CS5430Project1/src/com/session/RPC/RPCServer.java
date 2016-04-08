@@ -69,7 +69,7 @@ public class RPCServer extends Thread {
 
 			sessionTable.put(s.getSessionId(), s);
 
-			SimpleDateFormat sdfr = new SimpleDateFormat();
+			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 
 			String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
 					+ Constants.DELIMITER + sdfr.format(s.expiryTime) + Constants.DELIMITER + s.message;
