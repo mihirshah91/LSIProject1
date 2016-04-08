@@ -15,7 +15,8 @@ public interface Constants {
 	 int W = 2*F + 1;
 	 int N = W;
 	 int delta = 2 ; // extra seconds in discard time (delta)
-	 String filePath = "/Users/mihir/Desktop/IPTable" ;
+	 String filePath = "/Users/Shiva/git/LSIProject1/CS5430Project1/IPTable" ;
+	 String LOCALDATA_PATH = "/Users/Shiva/Documents/tmp/localdata";
 	 
 	 
 }
