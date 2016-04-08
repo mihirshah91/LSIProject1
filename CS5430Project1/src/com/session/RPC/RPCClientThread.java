@@ -5,8 +5,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.sessionManager.Constants;
@@ -111,6 +113,8 @@ public class RPCClientThread extends Thread {
 					String splitData[] = data.split(Constants.DELIMITER);
 					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
 					RPCClient.sessionObj.setIntialserverId(host);
+					SimpleDateFormat sdfr = new SimpleDateFormat();
+					RPCClient.sessionObj.setExpiryTime(sdfr.parse(splitData[3]));
 
 				}
 			}
