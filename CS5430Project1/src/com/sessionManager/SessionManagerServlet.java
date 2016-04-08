@@ -70,7 +70,7 @@ public class SessionManagerServlet extends HttpServlet {
 				 * cookieValue.substring(0, index);
 				 */
 				String tempData[] = cookieValue.split(Constants.DELIMITER);
-				sessionId = tempData[0] + Constants.DELIMITERVERSION + tempData[1];
+				sessionId = tempData[0];
 				message = request.getParameter("userMessage");
 				sessionCookie = c;
 				break;
@@ -161,7 +161,7 @@ public class SessionManagerServlet extends HttpServlet {
 			BufferedReader br = new BufferedReader(new FileReader(Constants.LOCALDATA_PATH));
 
 			sessionId = br.readLine();
-			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() + String.valueOf(++sessionNumber);
+			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() +Constants.DELIMITERVERSION+ String.valueOf(++sessionNumber);
 
 			br.close();
 

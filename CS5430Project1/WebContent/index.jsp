@@ -71,7 +71,8 @@
 
 					{
 
-						sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
+						sessionObj = s.retrieveSession(splitData[0]);
 					} else
 
 					{
