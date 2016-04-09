@@ -1,7 +1,7 @@
 package com.sessionManager;
 
 public interface Constants {
-	 int EXPIRYTIME = 180; // in seconds
+	 int EXPIRYTIME = 60; // in seconds
 	 String DELIMITER = "_"; 
 	 String DELIMITERVERSION = "$";
 	 int SESSIONREAD = 1;

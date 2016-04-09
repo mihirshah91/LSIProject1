@@ -1,4 +1,5 @@
 
+<%@page import="org.apache.catalina.tribes.group.RpcCallback"%>
 <%@page import="com.session.RPC.RPCClient"%>
 <%@page import="com.sessionManager.Constants"%>
 <%@page import="com.sessionManager.SessionManagerServlet"%>
@@ -46,6 +47,7 @@
   --%>
 
 	<%
+	Cookie sessioCookie= null;
 		Cookie[] cookies = request.getCookies();
 		SessionManagerServlet s = new SessionManagerServlet();
 		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -74,23 +76,27 @@
 
 						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
 						sessionObj = s.retrieveSession(splitData[0]);
+						//c.setMaxAge(Constants.EXPIRYTIME+ Constants.delta);
 					} else
 
 					{
 						int temp = Integer.parseInt(splitData[1]);
 						System.out.println("inside type=replcae");
-						sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0]);
+						 /* sessionObj = SessionManagerServlet.sessionTable
+								.get(splitData[0]);  */
+						sessionObj = RPCClient.sessionObj;
 					}
 
 					if (sessionObj != null) {
 						versionNumber = sessionObj.getVersionNumber();
 						message = sessionObj.getMessage();
-
-						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
-								+ splitData[2] + RPCClient.locationMetdata ;
+						sessionId = sessionObj.getSessionId();
+						/* cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
+								+ splitData[2] + RPCClient.locationMetdata ; */
+						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER + RPCClient.locationMetdata ;
 						expiryTime = sessionObj.getExpiryTime();
 						serverId = RPCClient.sessionObj.getIntialserverId();
+						
 						sessionFound = true;
 					}
 
@@ -108,6 +114,7 @@
 
 			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
 			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
+			
 			response.addCookie(sessionIdCookie);
 			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);

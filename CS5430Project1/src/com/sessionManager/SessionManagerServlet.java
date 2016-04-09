@@ -77,6 +77,8 @@ public class SessionManagerServlet extends HttpServlet {
 			}
 		}
 
+		
+		
 		if (request.getParameter("replaceButton") != null) {
 			// call replace method only if sessionid found else ignore - this
 			// can happen if session is expired and refresh is called
@@ -84,7 +86,8 @@ public class SessionManagerServlet extends HttpServlet {
 			if (sessionId != "")
 				replace(sessionId, message);
 			request.setAttribute("type", "replace");
-			
+			//sessionCookie.setMaxAge(expiry);
+			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			
@@ -95,6 +98,7 @@ public class SessionManagerServlet extends HttpServlet {
 			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
+			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
@@ -113,7 +117,7 @@ public class SessionManagerServlet extends HttpServlet {
 			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
-			
+			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
