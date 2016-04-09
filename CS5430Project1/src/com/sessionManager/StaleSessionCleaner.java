@@ -10,6 +10,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import com.session.RPC.RPCClient;
 import com.session.RPC.RPCServer;
 import com.sessionModel.SessionModel;
 
@@ -46,6 +47,7 @@ public class StaleSessionCleaner implements ServletContextListener {
 		
 		
 		RPCServer server = new RPCServer();
+		RPCClient.callJsonParser();
 		server.start();
 		
 	}

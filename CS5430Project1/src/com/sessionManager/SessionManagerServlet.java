@@ -73,6 +73,8 @@ public class SessionManagerServlet extends HttpServlet {
 				sessionId = tempData[0];
 				message = request.getParameter("userMessage");
 				sessionCookie = c;
+				
+				
 				break;
 
 			}
@@ -81,15 +83,19 @@ public class SessionManagerServlet extends HttpServlet {
 		if (request.getParameter("replaceButton") != null) {
 			// call replace method only if sessionid found else ignore - this
 			// can happen if session is expired and refresh is called
+			readLocation(Constants.SESSIONWRITE);
 			if (sessionId != "")
 				replace(sessionId, message);
 			request.setAttribute("type", "replace");
+			
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			
 
 		} else if (request.getParameter("refreshButton") != null) {
 			// call refresh method
+			
+			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
 			response.addCookie(sessionCookie);
@@ -99,6 +105,7 @@ public class SessionManagerServlet extends HttpServlet {
 
 		{
 			// call logout method
+			readLocation(Constants.SESSIONWRITE);
 			request.setAttribute("type", "logout");
 			logout(sessionId);
 			sessionCookie.setMaxAge(0);
@@ -106,13 +113,34 @@ public class SessionManagerServlet extends HttpServlet {
 			request.getRequestDispatcher("/logout.html").forward(request, response);
 		} else {
 			// if( sessionId == null && sessionId=="")
+			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
+			
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		}
 
+	}
+	
+	
+	public void readLocation(int opcode)
+	{
+		String splitData[] = null;
+		
+		if(sessionCookie == null)
+			opcode = Constants.SESSIONWRITE;
+		else
+		{
+			String cookieValue = sessionCookie.getValue();
+			splitData = cookieValue.split(Constants.DELIMITER);
+		}
+		
+		if(opcode == Constants.SESSIONREAD)
+			RPCClient.intializeIPList(splitData);
+		
+		
 	}
 
 	/*

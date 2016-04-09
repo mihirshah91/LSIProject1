@@ -1,15 +1,9 @@
 package com.session.RPC;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import com.sessionManager.Constants;
 import com.sessionModel.SessionModel;
@@ -23,6 +17,15 @@ public class RPCClientThread extends Thread {
 	String host;
 	static int WQAcks;
 	String message = "";
+	String serverid="";
+	
+	public String getServerid() {
+		return serverid;
+	}
+
+	public void setServerid(String serverid) {
+		this.serverid = serverid;
+	}
 
 	SessionModel session;
 
@@ -101,10 +104,10 @@ public class RPCClientThread extends Thread {
 				/*if(host.equals("10.132.2.77"))
 					sleep(3000);*/
 				
-				if (WQAcks <= Constants.WQ)
+				if (WQAcks <= Constants.WQ && opcode == Constants.SESSIONWRITE)
 				{
 					System.out.println("inside WQACK check");
-					RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + host;
+					RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + serverid;
 				}
 				// synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
