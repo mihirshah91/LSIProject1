@@ -115,7 +115,7 @@ public class RPCClientThread extends Thread {
 					String data = new String(receivePacket.getData());
 					String splitData[] = data.split(Constants.DELIMITER);
 					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
-					RPCClient.sessionObj.setIntialserverId(host);
+					RPCClient.sessionObj.setIntialserverId(serverid);
 					SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 					RPCClient.sessionObj.setExpiryTime(sdfr.parse(splitData[3]));
 

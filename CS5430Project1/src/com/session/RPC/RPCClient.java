@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sessionManager.Constants;
+import com.sessionManager.StaleSessionCleaner;
 import com.sessionModel.SessionModel;
 
 public class RPCClient {
@@ -27,7 +28,7 @@ public class RPCClient {
 	
 	
 	
-	static Map<String,String> serverMap = new LinkedHashMap<>();
+	
 	//int portProj1bRPC = 7111;
 	int maxPacketSize = 512;
 	static int callNumber = 0;
@@ -44,29 +45,13 @@ public class RPCClient {
 			
 			//dest.add(serverMap.get(ips[i]));
 			//serverid.add(ips[i]);
-			serverIdIp.put(ips[i], serverMap.get(ips[i]));
+			serverIdIp.put(ips[i], StaleSessionCleaner.serverMap.get(ips[i]));
 			
 		}
 		
 	}
 	
-	public static void intializeIPList()
-	{
-		System.out.println("intialize ip for write called");
-		allDests.clear();
-		serverid.clear();
-		Iterator<Map.Entry<String,String>> itr = serverMap.entrySet().iterator();
-		
-		while(itr.hasNext())
-		{
-			
-			Map.Entry<String, String> next = itr.next();
-			allDests.add(next.getValue());
-			
-		}
-		
-	}
-	
+
 	
 	
 	
@@ -78,7 +63,7 @@ public class RPCClient {
 			RPCClientThread.WQAcks = 0;
 			
 			// following method builds the map
-			callJsonParser();
+			
 			
 			Iterator<Map.Entry<String,String>> itr = null;
 			//Iterator<String> itr = null;
@@ -87,7 +72,7 @@ public class RPCClient {
 				itr = serverIdIp.entrySet().iterator();
 			else
 				//itr = allDests.iterator();
-				itr = serverMap.entrySet().iterator();
+				itr = StaleSessionCleaner.serverMap.entrySet().iterator();
 			
 			System.out.println("SESSION ID : " + id);
 			int index = 0;
@@ -129,46 +114,6 @@ public class RPCClient {
 		return sessionObj;
 	}
 	
-	public static void callJsonParser()
-	{
-		try {
-			
-			BufferedReader br = new BufferedReader(new FileReader(Constants.filePath));
-			 StringBuilder sb = new StringBuilder();
-			 String line = "";
-			 
-		        while ( (line=br.readLine()) != null) {
-		            sb.append(line);
-		            sb.append("\n");
-		           
-		        }
-			
-			System.out.println("json = " + sb);
-			
-			String json = new String(sb);
-			
-			JSONObject obj = new JSONObject(json);
-			//String pageName = obj.getJSONObject("pageInfo").getString("pageName");
-
-			JSONArray arr = obj.getJSONArray("Items");
-			for (int i = 0; i < arr.length(); i++)
-			{
-			    JSONArray ipArray = arr.getJSONObject(i).getJSONArray("Attributes");
-			    String ip = ipArray.getJSONObject(0).getString("Value");
-			    String serverid = arr.getJSONObject(i).getString("Name");
-			    serverMap.put(serverid, ip);
-			 //   System.out.println("ip = " + ip);
-			    
-			}
-
-			System.out.println("server map = " + serverMap);
-			
-			
-			} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+	
 
 }

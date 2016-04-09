@@ -1,7 +1,10 @@
 package com.sessionManager;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,6 +12,9 @@ import java.util.TimerTask;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.session.RPC.RPCClient;
 import com.session.RPC.RPCServer;
@@ -27,7 +33,7 @@ public class StaleSessionCleaner implements ServletContextListener {
 
 	long timeInterval = 15; // in seconds - time interval after which it should be run
 	long delay = 15;  // in seconds initial delay in seconds
-	
+	public static Map<String,String> serverMap = new LinkedHashMap<>();
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
@@ -47,12 +53,52 @@ public class StaleSessionCleaner implements ServletContextListener {
 		
 		
 		RPCServer server = new RPCServer();
-		RPCClient.callJsonParser();
+		callJsonParser();
 		server.start();
 		
 	}
 
-	
+	public static void callJsonParser()
+	{
+		try {
+			
+			BufferedReader br = new BufferedReader(new FileReader(Constants.filePath));
+			 StringBuilder sb = new StringBuilder();
+			 String line = "";
+			 
+		        while ( (line=br.readLine()) != null) {
+		            sb.append(line);
+		            sb.append("\n");
+		           
+		        }
+			
+			System.out.println("json = " + sb);
+			
+			String json = new String(sb);
+			
+			JSONObject obj = new JSONObject(json);
+			//String pageName = obj.getJSONObject("pageInfo").getString("pageName");
+
+			JSONArray arr = obj.getJSONArray("Items");
+			for (int i = 0; i < arr.length(); i++)
+			{
+			    JSONArray ipArray = arr.getJSONObject(i).getJSONArray("Attributes");
+			    String ip = ipArray.getJSONObject(0).getString("Value");
+			    String serverid = arr.getJSONObject(i).getString("Name");
+			    serverMap.put(serverid, ip);
+			 //   System.out.println("ip = " + ip);
+			    
+			}
+
+			System.out.println("server map = " + serverMap);
+			
+			
+			} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }
 
 
@@ -94,5 +140,9 @@ class GarbageCollector extends TimerTask
 		
 		
 	}
+	
+	
+	
+	
 	
 }
