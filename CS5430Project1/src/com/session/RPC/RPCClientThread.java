@@ -111,7 +111,8 @@ public class RPCClientThread extends Thread {
 				}
 				// synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
-
+						
+					System.out.println("inside first time assigning the object value");
 					String data = new String(receivePacket.getData());
 					String splitData[] = data.split(Constants.DELIMITER);
 					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);

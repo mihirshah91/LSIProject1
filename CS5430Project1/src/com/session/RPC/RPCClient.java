@@ -33,14 +33,20 @@ public class RPCClient {
 	int maxPacketSize = 512;
 	static int callNumber = 0;
 	public static SessionModel sessionObj = null;
-	public static String locationMetdata = "";
+	public static String locationMetdata ;
 
 	public static void intializeIPList(String[] ips)
 	{
 		System.out.println("intialize ip for read called");
 		//dest.clear();
 		serverIdIp.clear();
-		for(int i=2; i<ips.length;i++)
+		
+		String ipsnew[] = null;
+		
+		if(RPCClient.locationMetdata !=null)
+		{
+			ipsnew = RPCClient.locationMetdata.split(Constants.DELIMITER);
+		for(int i=0; i<ipsnew.length;i++)
 		{
 			
 			//dest.add(serverMap.get(ips[i]));
@@ -48,6 +54,9 @@ public class RPCClient {
 			serverIdIp.put(ips[i], StaleSessionCleaner.serverMap.get(ips[i]));
 			
 		}
+		
+		}
+		
 		
 	}
 	
@@ -59,11 +68,11 @@ public class RPCClient {
 
 		try {
 			sessionObj = null;
-			locationMetdata = "";
+			//locationMetdata = "";
 			RPCClientThread.WQAcks = 0;
 			
 			// following method builds the map
-			
+			System.out.println("inside RPCClient with opcode = " + opcode);
 			
 			Iterator<Map.Entry<String,String>> itr = null;
 			//Iterator<String> itr = null;
@@ -78,7 +87,10 @@ public class RPCClient {
 			int index = 0;
 			while(itr.hasNext()) {
 				
+				
 				Map.Entry<String, String> next = itr.next();
+				
+				System.out.println("inside RPCClient with server ip =" + next.getValue());
 				
 				RPCClientThread thread = null;
 				if (opcode == Constants.SESSIONREAD)
@@ -89,6 +101,7 @@ public class RPCClient {
 				}
 				else if (opcode == Constants.SESSIONWRITE)
 				{
+					locationMetdata="";
 					thread = new RPCClientThread(this, id, opcode, next.getValue(), message);
 					
 				}

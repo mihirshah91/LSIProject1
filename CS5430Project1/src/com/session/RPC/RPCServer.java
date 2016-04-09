@@ -120,8 +120,23 @@ public class RPCServer extends Thread {
 
 		}
 
-		String data = "";
-		return data.getBytes();
+		else {
+			// create session
+			System.out.println("inside create session of server in write");
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
+			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
+			SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello user");
+			ses.setExpiryTime(cal.getTime());
+			String outputString = callId + Constants.DELIMITER + sessionId.trim() + Constants.DELIMITER + "1"
+					+ Constants.DELIMITER + sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
+			sessionTable.put(sessionId.trim(), ses);
+
+			return outputString.getBytes();
+		}
+		
+		
+		
 
 	}
 

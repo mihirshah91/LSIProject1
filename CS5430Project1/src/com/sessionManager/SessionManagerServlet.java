@@ -171,8 +171,12 @@ public class SessionManagerServlet extends HttpServlet {
 	public SessionModel retrieveSession(String sessionId) {
 		System.out.println("inside retrieve sesison");
 		RPCClient c = new RPCClient();
-
-		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
+		SessionModel s = null;
+		
+		if(sessionCookie == null)
+			s = c.sendRequest(sessionId, Constants.SESSIONWRITE, "");
+		else
+			s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
 		if (s != null)
 			return s;
 
