@@ -85,6 +85,10 @@ public class RPCClient {
 			
 			System.out.println("SESSION ID : " + id);
 			int index = 0;
+			
+			if(opcode == Constants.SESSIONWRITE)
+				locationMetdata="";
+			
 			while(itr.hasNext()) {
 				
 				
@@ -101,7 +105,7 @@ public class RPCClient {
 				}
 				else if (opcode == Constants.SESSIONWRITE)
 				{
-					locationMetdata="";
+					
 					thread = new RPCClientThread(this, id, opcode, next.getValue(), message);
 					
 				}

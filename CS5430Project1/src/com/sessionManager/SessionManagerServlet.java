@@ -77,8 +77,14 @@ public class SessionManagerServlet extends HttpServlet {
 			}
 		}
 
-		
-		
+		if(sessionCookie == null)
+			{
+			String sessionID = getUniqueId();	
+			createSession(sessionID, request);
+			}
+			
+		else
+		{
 		if (request.getParameter("replaceButton") != null) {
 			// call replace method only if sessionid found else ignore - this
 			// can happen if session is expired and refresh is called
@@ -121,6 +127,7 @@ public class SessionManagerServlet extends HttpServlet {
 			response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
+		}
 		}
 
 	}
