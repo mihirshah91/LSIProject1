@@ -47,7 +47,7 @@
   --%>
 
 	<%
-	Cookie sessioCookie= null;
+		Cookie sessioCookie = null;
 		Cookie[] cookies = request.getCookies();
 		SessionManagerServlet s = new SessionManagerServlet();
 		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
@@ -61,6 +61,7 @@
 			for (Cookie c : cookies) {
 				System.out.println("cookie " + c.getName());
 				if (c.getName().equals("CS5300Project1SessionId")) {
+
 					String cookieValue = c.getValue();
 					/* int index = cookieValue.indexOf("_");
 					sessionId = cookieValue.substring(0, index); */
@@ -82,8 +83,8 @@
 					{
 						int temp = Integer.parseInt(splitData[1]);
 						System.out.println("inside type=replcae");
-						 /* sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0]);  */
+						/* sessionObj = SessionManagerServlet.sessionTable
+							.get(splitData[0]);  */
 						sessionObj = RPCClient.sessionObj;
 					}
 
@@ -93,10 +94,14 @@
 						sessionId = sessionObj.getSessionId();
 						/* cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
 								+ splitData[2] + RPCClient.locationMetdata ; */
-						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER + RPCClient.locationMetdata ;
+						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
+								+ RPCClient.locationMetdata;
+						c.setMaxAge(Constants.EXPIRYTIME);
+						c.setValue(cookie);
+						response.addCookie(c);
 						expiryTime = sessionObj.getExpiryTime();
 						serverId = RPCClient.sessionObj.getIntialserverId();
-						
+
 						sessionFound = true;
 					}
 
@@ -114,7 +119,7 @@
 
 			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
 			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
-			
+
 			response.addCookie(sessionIdCookie);
 			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);
@@ -151,10 +156,11 @@
 		</p>
 
 		<input type="submit" name="replaceButton" value="Replace"></input>
-		&nbsp;&nbsp; 
-		<input type="text" name="userMessage" value="" required="required" maxLength="512"></input> <br /> 
-		<input type="submit" name="refreshButton" value="Refresh" formnovalidate></input> <br /> 
-		<input type="submit" name="logoutButton" value="Logout" formnovalidate></input> <br />
+		&nbsp;&nbsp; <input type="text" name="userMessage" value=""
+			required="required" maxLength="512"></input> <br /> <input
+			type="submit" name="refreshButton" value="Refresh" formnovalidate></input>
+		<br /> <input type="submit" name="logoutButton" value="Logout"
+			formnovalidate></input> <br />
 
 
 	</form>
@@ -168,8 +174,8 @@
 
 	<%=expiryTime%>
 
-Session found server :
-<%=serverId  %>
+	Session found server :
+	<%=serverId%>
 
 
 </body>

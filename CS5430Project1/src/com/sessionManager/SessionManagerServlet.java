@@ -92,8 +92,8 @@ public class SessionManagerServlet extends HttpServlet {
 				replace(sessionId, message);
 			request.setAttribute("type", "replace");
 			//sessionCookie.setMaxAge(expiry);
-			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			response.addCookie(sessionCookie);
+			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+			//response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			
 
@@ -103,8 +103,8 @@ public class SessionManagerServlet extends HttpServlet {
 			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
-			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			response.addCookie(sessionCookie);
+			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+			//response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		} else if (request.getParameter("logoutButton") != null)
@@ -122,8 +122,8 @@ public class SessionManagerServlet extends HttpServlet {
 			readLocation(Constants.SESSIONREAD);
 			refresh(sessionId);
 			request.setAttribute("type", "refresh");
-			sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			response.addCookie(sessionCookie);
+			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+			//response.addCookie(sessionCookie);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		}
