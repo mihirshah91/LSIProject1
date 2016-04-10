@@ -79,8 +79,7 @@ public class SessionManagerServlet extends HttpServlet {
 
 		if(sessionCookie == null)
 			{
-			String sessionID = getUniqueId();	
-			createSession(sessionID, request);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
 			
 		else
