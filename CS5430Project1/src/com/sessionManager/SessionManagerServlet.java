@@ -57,7 +57,7 @@ public class SessionManagerServlet extends HttpServlet {
 		String message = "";
 
 		// handle the case for session time-out here
-
+		sessionCookie = null;	
 		for (Cookie c : cookies) {
 
 			if (c.getName().equals("CS5300Project1SessionId")) {
@@ -221,7 +221,11 @@ public class SessionManagerServlet extends HttpServlet {
 		System.out.println("sessionTable= " + sessionTable);
 
 		RPCClient c = new RPCClient();
-		SessionModel s = c.sendRequest(uniqueID, Constants.SESSIONREAD, "");
+		SessionModel s = null;
+		if(sessionCookie == null)
+			s = c.sendRequest(uniqueID, Constants.SESSIONWRITE, "");
+		else
+			s = c.sendRequest(uniqueID, Constants.SESSIONREAD, "");
 		System.out.println("unique id generated is " + uniqueID);
 		return uniqueID;
 

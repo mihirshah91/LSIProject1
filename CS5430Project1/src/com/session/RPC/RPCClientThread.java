@@ -107,7 +107,10 @@ public class RPCClientThread extends Thread {
 				if (WQAcks <= Constants.WQ && opcode == Constants.SESSIONWRITE)
 				{
 					System.out.println("inside WQACK check");
-					RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + serverid;
+					if(RPCClient.locationMetdata.equals(""))
+						RPCClient.locationMetdata = serverid;
+					else
+						RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + serverid;
 				}
 				// synchronized (RPCClient.sessionObj) {
 				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {

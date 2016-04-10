@@ -45,8 +45,8 @@ public class RPCClient {
 		
 		if(RPCClient.locationMetdata !=null)
 		{
-			ipsnew = RPCClient.locationMetdata.split(Constants.DELIMITER);
-		for(int i=0; i<ipsnew.length;i++)
+			
+		for(int i=2; i<ips.length;i++)
 		{
 			
 			//dest.add(serverMap.get(ips[i]));
