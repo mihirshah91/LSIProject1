@@ -96,14 +96,10 @@
 								+ splitData[2] + RPCClient.locationMetdata ; */
 						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
 								+ RPCClient.locationMetdata;
-						
-						if(!type.equalsIgnoreCase(Constants.LOGOUTYPE))		
-							c.setMaxAge(Constants.EXPIRYTIME);
-						else
-							c.setMaxAge(0);
+						c.setMaxAge(Constants.EXPIRYTIME);
 						c.setValue(cookie);
 						c.setDomain(Constants.DOMAIN_NAME);
-						//c.setPath("/");
+						c.setPath("/");
 						response.addCookie(c);
 						expiryTime = sessionObj.getExpiryTime();
 						serverId = RPCClient.sessionObj.getIntialserverId();
@@ -127,7 +123,7 @@
 			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
 			sessionIdCookie.setDomain(Constants.DOMAIN_NAME);
 			
-			//sessioCookie.setPath("/");
+			sessionIdCookie.setPath("/");
 			response.addCookie(sessionIdCookie);
 			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);

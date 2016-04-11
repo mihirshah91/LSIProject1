@@ -110,9 +110,11 @@ public class SessionManagerServlet extends HttpServlet {
 				{
 					// call logout method
 					readLocation(Constants.SESSIONWRITE);
-					request.setAttribute("type", Constants.LOGOUTYPE);
+					request.setAttribute("type",  Constants.LOGOUTYPE);
 					logout(sessionId);
 					sessionCookie.setMaxAge(0);
+					sessionCookie.setPath("/");
+					sessionCookie.setValue("");
 					response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/logout.html").forward(request, response);
 				} else {
