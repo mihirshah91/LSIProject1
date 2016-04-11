@@ -1,6 +1,7 @@
 package com.sessionManager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Date;
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public class StaleSessionCleaner implements ServletContextListener {
 	long timeInterval = 15; // in seconds - time interval after which it should be run
 	long delay = 15;  // in seconds initial delay in seconds
 	public static Map<String,String> serverMap = new LinkedHashMap<>();
-	
+	static public  String filepath = null;
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
@@ -45,6 +46,8 @@ public class StaleSessionCleaner implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
+		
+		filepath = this.getClass().getResource("/").getPath();
 		System.out.println("listener started");
 		
 		TimerTask timerTask = new GarbageCollector();
@@ -62,7 +65,9 @@ public class StaleSessionCleaner implements ServletContextListener {
 	{
 		try {
 			
-			BufferedReader br = new BufferedReader(new FileReader(Constants.filePath));
+			filepath = filepath.replace("WEB-INF/classes/", "");
+			
+			BufferedReader br = new BufferedReader(new FileReader( filepath+ Constants.filePath));
 			 StringBuilder sb = new StringBuilder();
 			 String line = "";
 			 

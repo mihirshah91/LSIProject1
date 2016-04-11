@@ -98,6 +98,8 @@
 								+ RPCClient.locationMetdata;
 						c.setMaxAge(Constants.EXPIRYTIME);
 						c.setValue(cookie);
+						c.setDomain(".bigdata.systems");
+						//c.setPath("/");
 						response.addCookie(c);
 						expiryTime = sessionObj.getExpiryTime();
 						serverId = RPCClient.sessionObj.getIntialserverId();
@@ -119,7 +121,9 @@
 
 			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
 			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
-
+			sessionIdCookie.setDomain(Constants.DOMAIN_NAME);
+			
+			//sessioCookie.setPath("/");
 			response.addCookie(sessionIdCookie);
 			serverId = RPCClient.sessionObj.getIntialserverId();
 			initialize(sessionID, temp);

@@ -16,9 +16,13 @@ public interface Constants {
 	 int W = 2*F + 1;
 	 int N = W;
 	 int delta = 2 ; // extra seconds in discard time (delta)
-	 String filePath = "/Users/Shiva/git/LSIProject1/CS5430Project1/IPTable" ;
-	 String LOCALDATA_PATH = "/Users/Shiva/Documents/tmp/localdata";
+	 //String filePath = "/Users/Shiva/git/LSIProject1/CS5430Project1/IPTable" ;
+	 String filePath = "IPTable" ;
+	 String LOCALDATA_PATH = "localdata";
+	// String filePath = "/home/ec2-user/IPTable" ;
+	//String LOCALDATA_PATH = "/home/ec2-user/localdata";
 	 int RPC_PORT = 7111;
+	 String DOMAIN_NAME = ".bigdata.systems";
 	 
 	 
 }

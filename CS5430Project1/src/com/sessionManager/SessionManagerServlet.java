@@ -27,7 +27,7 @@ import com.sessionModel.SessionModel;
 public class SessionManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String, SessionModel> sessionTable = new ConcurrentHashMap<String, SessionModel>();
-	 // always written in seconds
+	// always written in seconds
 	static int sessionNumber = 0;
 	Cookie sessionCookie;
 
@@ -57,97 +57,92 @@ public class SessionManagerServlet extends HttpServlet {
 		String message = "";
 
 		// handle the case for session time-out here
-		sessionCookie = null;	
-		for (Cookie c : cookies) {
+		sessionCookie = null;
+		if (cookies != null) {
+			for (Cookie c : cookies) {
 
-			if (c.getName().equals("CS5300Project1SessionId")) {
-				String cookieValue = c.getValue();
-				/*
-				 * int index = cookieValue.indexOf("_"); sessionId =
-				 * cookieValue.substring(0, index);
-				 */
-				String tempData[] = cookieValue.split(Constants.DELIMITER);
-				sessionId = tempData[0];
-				message = request.getParameter("userMessage");
-				sessionCookie = c;
-				
-				
-				break;
+				if (c.getName().equals("CS5300Project1SessionId")) {
+					String cookieValue = c.getValue();
+					/*
+					 * int index = cookieValue.indexOf("_"); sessionId =
+					 * cookieValue.substring(0, index);
+					 */
+					String tempData[] = cookieValue.split(Constants.DELIMITER);
+					sessionId = tempData[0];
+					message = request.getParameter("userMessage");
+					sessionCookie = c;
 
+					break;
+
+				}
 			}
-		}
 
-		if(sessionCookie == null)
-			{
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			if (sessionCookie == null) {
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
-			
-		else
-		{
-		if (request.getParameter("replaceButton") != null) {
-			// call replace method only if sessionid found else ignore - this
-			// can happen if session is expired and refresh is called
-			readLocation(Constants.SESSIONWRITE);
-			if (sessionId != "")
-				replace(sessionId, message);
-			request.setAttribute("type", "replace");
-			//sessionCookie.setMaxAge(expiry);
-			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			//response.addCookie(sessionCookie);
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
-			
 
-		} else if (request.getParameter("refreshButton") != null) {
-			// call refresh method
-			
-			readLocation(Constants.SESSIONREAD);
-			refresh(sessionId);
-			request.setAttribute("type", "refresh");
-			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			//response.addCookie(sessionCookie);
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			else {
+				if (request.getParameter("replaceButton") != null) {
+					// call replace method only if sessionid found else ignore -
+					// this
+					// can happen if session is expired and refresh is called
+					readLocation(Constants.SESSIONWRITE);
+					if (sessionId != "")
+						replace(sessionId, message);
+					request.setAttribute("type", "replace");
+					// sessionCookie.setMaxAge(expiry);
+					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+					// response.addCookie(sessionCookie);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-		} else if (request.getParameter("logoutButton") != null)
+				} else if (request.getParameter("refreshButton") != null) {
+					// call refresh method
 
-		{
-			// call logout method
-			readLocation(Constants.SESSIONWRITE);
-			request.setAttribute("type", "logout");
-			logout(sessionId);
-			sessionCookie.setMaxAge(0);
-			response.addCookie(sessionCookie);
-			request.getRequestDispatcher("/logout.html").forward(request, response);
-		} else {
-			// if( sessionId == null && sessionId=="")
-			readLocation(Constants.SESSIONREAD);
-			refresh(sessionId);
-			request.setAttribute("type", "refresh");
-			//sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-			//response.addCookie(sessionCookie);
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+					readLocation(Constants.SESSIONREAD);
+					refresh(sessionId);
+					request.setAttribute("type", "refresh");
+					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+					// response.addCookie(sessionCookie);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+
+				} else if (request.getParameter("logoutButton") != null)
+
+				{
+					// call logout method
+					readLocation(Constants.SESSIONWRITE);
+					request.setAttribute("type", "logout");
+					logout(sessionId);
+					sessionCookie.setMaxAge(0);
+					response.addCookie(sessionCookie);
+					request.getRequestDispatcher("/logout.html").forward(request, response);
+				} else {
+					// if( sessionId == null && sessionId=="")
+					readLocation(Constants.SESSIONREAD);
+					refresh(sessionId);
+					request.setAttribute("type", "refresh");
+					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+					// response.addCookie(sessionCookie);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+
+				}
+			}
 
 		}
-		}
-
 	}
-	
-	
-	public void readLocation(int opcode)
-	{
+
+	public void readLocation(int opcode) {
 		String splitData[] = null;
-		
-		if(sessionCookie == null)
+
+		if (sessionCookie == null)
 			opcode = Constants.SESSIONWRITE;
-		else
-		{
+		else {
 			String cookieValue = sessionCookie.getValue();
 			splitData = cookieValue.split(Constants.DELIMITER);
 		}
-		
-		if(opcode == Constants.SESSIONREAD)
+
+		if (opcode == Constants.SESSIONREAD)
 			RPCClient.intializeIPList(splitData);
-		
-		
+
 	}
 
 	/*
@@ -182,8 +177,8 @@ public class SessionManagerServlet extends HttpServlet {
 		System.out.println("inside retrieve sesison");
 		RPCClient c = new RPCClient();
 		SessionModel s = null;
-		
-		if(sessionCookie == null)
+
+		if (sessionCookie == null)
 			s = c.sendRequest(sessionId, Constants.SESSIONWRITE, "");
 		else
 			s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
@@ -200,11 +195,15 @@ public class SessionManagerServlet extends HttpServlet {
 	public String getUniqueId() {
 		String sessionId = null;
 		try {
-
-			BufferedReader br = new BufferedReader(new FileReader(Constants.LOCALDATA_PATH));
+			String filepath = this.getClass().getResource("/").getPath();
+			
+			filepath = filepath.replace("WEB-INF/classes/", "");
+			System.out.println("LOCAL DATA FILE " + filepath);
+			BufferedReader br = new BufferedReader(new FileReader(filepath + Constants.LOCALDATA_PATH));
 
 			sessionId = br.readLine();
-			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() +Constants.DELIMITERVERSION+ String.valueOf(++sessionNumber);
+			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() + Constants.DELIMITERVERSION
+					+ String.valueOf(++sessionNumber);
 
 			br.close();
 
@@ -228,7 +227,7 @@ public class SessionManagerServlet extends HttpServlet {
 
 		RPCClient c = new RPCClient();
 		SessionModel s = null;
-		if(sessionCookie == null)
+		if (sessionCookie == null)
 			s = c.sendRequest(uniqueID, Constants.SESSIONWRITE, "");
 		else
 			s = c.sendRequest(uniqueID, Constants.SESSIONREAD, "");
