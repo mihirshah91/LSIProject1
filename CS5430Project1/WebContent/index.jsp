@@ -96,9 +96,13 @@
 								+ splitData[2] + RPCClient.locationMetdata ; */
 						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
 								+ RPCClient.locationMetdata;
-						c.setMaxAge(Constants.EXPIRYTIME);
+						
+						if(!type.equalsIgnoreCase(Constants.LOGOUTYPE))		
+							c.setMaxAge(Constants.EXPIRYTIME);
+						else
+							c.setMaxAge(0);
 						c.setValue(cookie);
-						c.setDomain(".bigdata.systems");
+						c.setDomain(Constants.DOMAIN_NAME);
 						//c.setPath("/");
 						response.addCookie(c);
 						expiryTime = sessionObj.getExpiryTime();

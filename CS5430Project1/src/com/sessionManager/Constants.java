@@ -22,7 +22,8 @@ public interface Constants {
 	// String filePath = "/home/ec2-user/IPTable" ;
 	//String LOCALDATA_PATH = "/home/ec2-user/localdata";
 	 int RPC_PORT = 7111;
+	 //String DOMAIN_NAME = ".bigdata.systems";
 	 String DOMAIN_NAME = ".bigdata.systems";
-	 
+	 String LOGOUTYPE = "logout";
 	 
 }

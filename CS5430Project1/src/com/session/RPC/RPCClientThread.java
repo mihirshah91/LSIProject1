@@ -74,6 +74,7 @@ public class RPCClientThread extends Thread {
 			clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName(host);
 			DatagramPacket sendPkt = new DatagramPacket(outBuf, outBuf.length, IPAddress, Constants.RPC_PORT);
+			clientSocket.setSoTimeout(10000);
 			clientSocket.send(sendPkt);
 
 			byte[] inBuf = new byte[client.maxPacketSize];
@@ -84,6 +85,7 @@ public class RPCClientThread extends Thread {
 				System.out.println("inside do while client thread");
 				receivePacket.setLength(inBuf.length);
 				clientSocket.receive(receivePacket);
+				
 				String data = new String(receivePacket.getData());
 				int index = data.indexOf("_");
 
