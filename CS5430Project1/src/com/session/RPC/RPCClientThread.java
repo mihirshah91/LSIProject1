@@ -88,7 +88,8 @@ public class RPCClientThread extends Thread {
 				
 				String data = new String(receivePacket.getData());
 				int index = data.indexOf("_");
-
+				if(opcode == Constants.SESSIONLOGOUT)
+					break;
 				callidReturned = Integer.parseInt(data.substring(0, index));
 
 				System.out.println("localNumber=" + localNumber);

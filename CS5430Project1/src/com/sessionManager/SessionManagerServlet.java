@@ -28,7 +28,7 @@ public class SessionManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String, SessionModel> sessionTable = new ConcurrentHashMap<String, SessionModel>();
 	// always written in seconds
-	static int sessionNumber = 0;
+	public static int sessionNumber = 1;
 	Cookie sessionCookie;
 
 	public SessionManagerServlet() {
@@ -95,32 +95,35 @@ public class SessionManagerServlet extends HttpServlet {
 					// response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-				} else if (request.getParameter("refreshButton") != null) {
+				} /*else if (request.getParameter("refreshButton") != null) {
 					// call refresh method
 
 					readLocation(Constants.SESSIONREAD);
 					refresh(sessionId);
-					request.setAttribute("type", "refresh");
-					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
-					// response.addCookie(sessionCookie);
+					request.setAttribute("type", "refresh"); //
+					//sessionCookie.setMaxAge(Constants.EXPIRYTIME); //
+					//response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-				} else if (request.getParameter("logoutButton") != null)
+				}*/ else if (request.getParameter("logoutButton") != null)
 
 				{
 					// call logout method
 					readLocation(Constants.SESSIONWRITE);
-					request.setAttribute("type",  Constants.LOGOUTYPE);
+					request.setAttribute("type", Constants.LOGOUTYPE);
 					logout(sessionId);
 					sessionCookie.setMaxAge(0);
 					sessionCookie.setPath("/");
 					sessionCookie.setValue("");
 					response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/logout.html").forward(request, response);
+					System.out.println("AFTER DELETING FROM THE COOKIE");
+
 				} else {
 					// if( sessionId == null && sessionId=="")
+					
 					readLocation(Constants.SESSIONREAD);
-					refresh(sessionId);
+					refresh(sessionId, request,response);
 					request.setAttribute("type", "refresh");
 					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
 					// response.addCookie(sessionCookie);
@@ -153,11 +156,21 @@ public class SessionManagerServlet extends HttpServlet {
 
 	public void logout(String sessionId) {
 		sessionTable.remove(sessionId);
+		System.out.println("Replace method called");
+		RPCClient c = new RPCClient();
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONLOGOUT, "");
 	}
 
-	public void refresh(String sessionId) {
+	public void refresh(String sessionId, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RPCClient c = new RPCClient();
-		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
+		if (sessionTable == null || !sessionTable.containsKey(sessionId)) {
+//			sessionId = getUniqueId();
+//			c.sendRequest(sessionId, Constants.SESSIONWRITE, "");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		} else {
+
+			SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
+		}
 	}
 
 	/*
@@ -198,14 +211,15 @@ public class SessionManagerServlet extends HttpServlet {
 		String sessionId = null;
 		try {
 			String filepath = this.getClass().getResource("/").getPath();
-			
+
 			filepath = filepath.replace("WEB-INF/classes/", "");
 			System.out.println("LOCAL DATA FILE " + filepath);
 			BufferedReader br = new BufferedReader(new FileReader(filepath + Constants.LOCALDATA_PATH));
 
 			sessionId = br.readLine();
 			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() + Constants.DELIMITERVERSION
-					+ String.valueOf(++sessionNumber);
+					+ String.valueOf(sessionNumber);
+			sessionNumber++;
 
 			br.close();
 

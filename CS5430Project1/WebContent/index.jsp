@@ -56,12 +56,12 @@
 		//response.setDateHeader("Last-Modified", new Date().getTime());
 
 		boolean sessionFound = false;
-
+		
 		if (cookies != null) {
 			for (Cookie c : cookies) {
 				System.out.println("cookie " + c.getName());
 				if (c.getName().equals("CS5300Project1SessionId")) {
-
+						
 					String cookieValue = c.getValue();
 					/* int index = cookieValue.indexOf("_");
 					sessionId = cookieValue.substring(0, index); */
@@ -74,18 +74,31 @@
 					if (type == null)
 
 					{
-
+						
+						String sessionID= splitData[0];
 						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
-						sessionObj = s.retrieveSession(splitData[0]);
+						if(SessionManagerServlet.sessionTable == null ||  !SessionManagerServlet.sessionTable.containsKey(sessionId)){
+							//sessionID =new SessionManagerServlet().getUniqueId();
+							
+							//It will move to create new session
+							break;
+							
+							
+						}
+						else{
+						sessionObj = s.retrieveSession(sessionID);
+						}
 						//c.setMaxAge(Constants.EXPIRYTIME+ Constants.delta);
 					} else
 
 					{
+						
 						int temp = Integer.parseInt(splitData[1]);
 						System.out.println("inside type=replcae");
 						/* sessionObj = SessionManagerServlet.sessionTable
 							.get(splitData[0]);  */
-						sessionObj = RPCClient.sessionObj;
+						sessionObj = SessionManagerServlet.sessionTable
+								.get(splitData[0]);
 					}
 
 					if (sessionObj != null) {
@@ -99,15 +112,16 @@
 						c.setMaxAge(Constants.EXPIRYTIME);
 						c.setValue(cookie);
 						c.setDomain(Constants.DOMAIN_NAME);
-						c.setPath("/");
+						c.setPath("/"); 
 						response.addCookie(c);
 						expiryTime = sessionObj.getExpiryTime();
 						serverId = RPCClient.sessionObj.getIntialserverId();
 
 						sessionFound = true;
 					}
-
+				break;
 				}
+			
 
 			}
 

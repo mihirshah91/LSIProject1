@@ -52,7 +52,7 @@ public class StaleSessionCleaner implements ServletContextListener {
 		
 		TimerTask timerTask = new GarbageCollector();
 		Timer timer = new Timer();
-		//timer.schedule(timerTask,delay*1000,timeInterval*1000);
+		timer.schedule(timerTask,delay*1000,timeInterval*1000);
 		
 		
 		RPCServer server = new RPCServer();
