@@ -85,15 +85,17 @@ public class RPCClient {
 				}
 			else if(opcode == Constants.SESSIONWRITE)  // first time create session
 			{
+				
 				s.setExpiryTime(new Date((new Date()).getTime() + Constants.EXPIRYTIME));
+				locationMetdata="";
 				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,s);
 			}
 			
-			System.out.println("SESSION ID : " + id);
-			int index = 0;
-			
-			if(opcode == Constants.SESSIONWRITE)
-				locationMetdata="";
+//			System.out.println("SESSION ID : " + id);
+//			int index = 0;
+//			
+//			if(opcode == Constants.SESSIONWRITE)
+//				locationMetdata="";
 			
 			
 

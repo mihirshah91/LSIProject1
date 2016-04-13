@@ -1,14 +1,6 @@
 
-<%@page import="org.apache.catalina.tribes.group.RpcCallback"%>
-<%@page import="com.session.RPC.RPCClient"%>
-<%@page import="com.sessionManager.Constants"%>
-<%@page import="com.sessionManager.SessionManagerServlet"%>
-<%@page import="com.sessionModel.SessionModel"%>
-<%@page import="com.sessionManager.*"%>
-
 
 <%@ page import="java.io.*,java.util.*"%>
-
 
 
 <html>
@@ -20,26 +12,28 @@
 
 	<%-- Declaring general variables used for display on page --%>
 
-	<%!String sessionId;
+	<%!
+	String sessionId;
 	int versionNumber;
 	String message;
 	String cookie;
 	// always in seconds
-	Date expiryTime;
+	//Date expiryTime;
 	String serverId;
 
 	// Initializing variables which are displayed on screen for first request of new session
 
-	public void initialize(String id, String cookieTemp) {
+	/* public void initialize(String id, String cookieTemp) {
 		sessionId = id;
 		versionNumber = 1;
 		message = "Hello user";
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+		cal.add(Calendar.SECOND, Constants.EXPIRYTIME );
 
 		expiryTime = cal.getTime();
 		cookie = cookieTemp;
-	}%>
+	} */
+	%>
 
 	<%-- Below code identifies if the cookie is set in request or not.
  	  If not then create the session, seth the cookie in response with expiry time
@@ -111,7 +105,7 @@
 	%>
 	&nbsp;&nbsp; Expires :
 
-	<%=expiryTime%>
+	<%="expiryTime"%>
 
 	Session found server :
 	<%=serverId%>

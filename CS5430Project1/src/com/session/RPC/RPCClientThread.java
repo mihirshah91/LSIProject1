@@ -112,15 +112,15 @@ public class RPCClientThread extends Thread {
 				// synchronized (RPCClient.sessionObj) {
 				
 				// think for read and write
-				if (data == null && RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT && opcode!=Constants.SESSIONWRITE) {
+				if (data == null && RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT ) {
 						
 					System.out.println("inside first time assigning the object value");
-					//data = new String(receivePacket.getData());
+				
 					String splitData[] = data.split(Constants.DELIMITER);
-					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
 					RPCClient.sessionObj.setIntialserverId(serverid);
 					SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
-					RPCClient.sessionObj.setExpiryTime(sdfr.parse(splitData[3]));
+					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4],sdfr.parse(splitData[3]));
+					
 
 				}
 			}

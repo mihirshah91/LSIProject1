@@ -14,7 +14,7 @@ import com.sessionModel.SessionModel;
 
 public class RPCServer extends Thread {
 
-	//int portProj1bRPC = 7111;
+	// int portProj1bRPC = 7111;
 	int maxPacketSize = 512;
 	DatagramSocket rpcSocket = null;
 
@@ -63,9 +63,10 @@ public class RPCServer extends Thread {
 			String tempid = s.getSessionId();
 			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
 
-			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
-			//String tempnewkey = tempSplitData[0] ;
-			//System.out.println("new key= " + tempnewkey);
+			// String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION
+			// + s.getVersionNumber();
+			// String tempnewkey = tempSplitData[0] ;
+			// System.out.println("new key= " + tempnewkey);
 
 			sessionTable.put(s.getSessionId(), s);
 
@@ -77,66 +78,69 @@ public class RPCServer extends Thread {
 			return data.getBytes();
 		} else {
 			// create session
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
-			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
-			SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello user");
-			ses.setExpiryTime(cal.getTime());
-			String outputString = callId + Constants.DELIMITER + sessionId.trim() + Constants.DELIMITER + "1"
-					+ Constants.DELIMITER + sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
-			sessionTable.put(sessionId.trim(), ses);
+			// Calendar cal = Calendar.getInstance();
+			// cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
+			// SimpleDateFormat sdfr = new
+			// SimpleDateFormat(Constants.dateFormat);
+			// SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello
+			// user");
+			// ses.setExpiryTime(cal.getTime());
+			// String outputString = callId + Constants.DELIMITER +
+			// sessionId.trim() + Constants.DELIMITER + "1"
+			// + Constants.DELIMITER + sdfr.format(ses.expiryTime) +
+			// Constants.DELIMITER + ses.message;
+			// sessionTable.put(sessionId.trim(), ses);
 
-			return outputString.getBytes();
+			return Constants.SESSION_NOTFOUND.getBytes();
 		}
 		// return null;
 	}
 
 	public byte[] sessionWrite(String callId, String sessionId, String message) {
 		Map<String, SessionModel> sessionTable = SessionManagerServlet.sessionTable;
-		SessionModel s = SessionManagerServlet.sessionTable.get(sessionId.trim());
+		// SessionModel s =
+		// SessionManagerServlet.sessionTable.get(sessionId.trim());
+		SessionModel s = new SessionModel();
+		int version = s.getVersionNumber();
 
-		if (s != null) {
-			int version = s.getVersionNumber();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
+		// cal.add(Calendar.SECOND, amount);
+		s.setExpiryTime(cal.getTime());
+		s.setVersionNumber(version);
+		s.setMessage(message);
+		String tempid = s.getSessionId();
 
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
-			//cal.add(Calendar.SECOND, amount);
-			s.setExpiryTime(cal.getTime() );
-			s.setVersionNumber(version + 1);
-			s.setMessage(message);
-			String tempid = s.getSessionId();
+		String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
+		// String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION +
+		// s.getVersionNumber();
+		// String tempnewkey = tempSplitData[0] ;
+		// System.out.println("new key= " + tempnewkey);
+		sessionTable.put(s.getSessionId(), s);
 
-			String tempSplitData[] = tempid.split(Constants.DEFAULTVERSIONNUMBER);
-			//String tempnewkey = tempSplitData[0] + Constants.DELIMITERVERSION + s.getVersionNumber();
-			//String tempnewkey = tempSplitData[0] ;
-			//System.out.println("new key= " + tempnewkey);
-			sessionTable.put(s.getSessionId(), s);
+		SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
+		String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
+				+ Constants.DELIMITER + sdfr.format(s.expiryTime) + Constants.DELIMITER + s.message;
 
-			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
-			String data = callId + Constants.DELIMITER + s.sessionId + Constants.DELIMITER + s.versionNumber
-					+ Constants.DELIMITER + sdfr.format(s.expiryTime) + Constants.DELIMITER + s.message;
+		return data.getBytes();
 
-			return data.getBytes();
-
-		}
-
-		else {
-			// create session
-			System.out.println("inside create session of server in write");
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
-			SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
-			SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello user");
-			ses.setExpiryTime(cal.getTime());
-			String outputString = callId + Constants.DELIMITER + sessionId.trim() + Constants.DELIMITER + "1"
-					+ Constants.DELIMITER + sdfr.format(ses.expiryTime) + Constants.DELIMITER + ses.message;
-			sessionTable.put(sessionId.trim(), ses);
-
-			return outputString.getBytes();
-		}
-		
-		
-		
+		// else {
+		// // create session
+		// System.out.println("inside create session of server in write");
+		// Calendar cal = Calendar.getInstance();
+		// cal.add(Calendar.SECOND, Constants.EXPIRYTIME + Constants.delta);
+		// SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
+		// SessionModel ses = new SessionModel(sessionId.trim(), 1, "Hello
+		// user");
+		// ses.setExpiryTime(cal.getTime());
+		// String outputString = callId + Constants.DELIMITER + sessionId.trim()
+		// + Constants.DELIMITER + "1"
+		// + Constants.DELIMITER + sdfr.format(ses.expiryTime) +
+		// Constants.DELIMITER + ses.message;
+		// sessionTable.put(sessionId.trim(), ses);
+		//
+		// return outputString.getBytes();
+		// }
 
 	}
 
@@ -181,7 +185,7 @@ public class RPCServer extends Thread {
 				}
 
 				}
-				
+
 				// here outBuf should contain the callID and results of the call
 				DatagramPacket sendPkt;
 				if (outBuf != null) {
