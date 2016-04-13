@@ -47,6 +47,7 @@
   --%>
 
 	<%
+	
 		Cookie sessioCookie = null;
 		Cookie[] cookies = request.getCookies();
 		SessionManagerServlet s = new SessionManagerServlet();
@@ -77,7 +78,7 @@
 						
 						String sessionID= splitData[0];
 						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
-						if(SessionManagerServlet.sessionTable == null ||  !SessionManagerServlet.sessionTable.containsKey(sessionId)){
+						if(SessionManagerServlet.sessionTable == null || sessionID.equals("null") || sessionID == null || !SessionManagerServlet.sessionTable.containsKey(sessionId)){
 							//sessionID =new SessionManagerServlet().getUniqueId();
 							
 							//It will move to create new session
@@ -97,8 +98,7 @@
 						System.out.println("inside type=replcae");
 						/* sessionObj = SessionManagerServlet.sessionTable
 							.get(splitData[0]);  */
-						sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0]);
+						sessionObj = RPCClient.sessionObj;
 					}
 
 					if (sessionObj != null) {
