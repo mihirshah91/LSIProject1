@@ -65,9 +65,10 @@ public class StaleSessionCleaner implements ServletContextListener {
 	{
 		try {
 			
-			filepath = filepath.replace("WEB-INF/classes/", "");
+			//filepath = filepath.replace("WEB-INF/classes/", "");
 			
-			BufferedReader br = new BufferedReader(new FileReader( filepath+ Constants.filePath));
+			//BufferedReader br = new BufferedReader(new FileReader( filepath+ Constants.filePath));
+			BufferedReader br = new BufferedReader(new FileReader( Constants.filePath));
 			 StringBuilder sb = new StringBuilder();
 			 String line = "";
 			 

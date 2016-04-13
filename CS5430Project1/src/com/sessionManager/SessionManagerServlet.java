@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.session.RPC.RPCClient;
 import com.sessionModel.SessionModel;
+import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 
 /**
  * @author mihir Servlet implementation class SessionManagerServlet. It has
@@ -214,9 +215,12 @@ public class SessionManagerServlet extends HttpServlet {
 
 			filepath = filepath.replace("WEB-INF/classes/", "");
 			System.out.println("LOCAL DATA FILE " + filepath);
-			BufferedReader br = new BufferedReader(new FileReader(filepath + Constants.LOCALDATA_PATH));
+			
+			//BufferedReader br = new BufferedReader(new FileReader(filepath + Constants.LOCALDATA_PATH));
 
-			sessionId = br.readLine();
+			BufferedReader br = new BufferedReader(new FileReader(Constants.REBOOT_DATA_PATH));
+			BufferedReader br_reboot = new BufferedReader(new FileReader(Constants.SERVER_ID_PATH));
+			sessionId = br_reboot.readLine();
 			sessionId = sessionId + Constants.DELIMITERVERSION + br.readLine() + Constants.DELIMITERVERSION
 					+ String.valueOf(sessionNumber);
 			sessionNumber++;

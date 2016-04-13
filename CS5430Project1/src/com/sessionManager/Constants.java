@@ -17,13 +17,19 @@ public interface Constants {
 	 int N = W;
 	 int delta = 2 ; // extra seconds in discard time (delta)
 	 //String filePath = "/Users/Shiva/git/LSIProject1/CS5430Project1/IPTable" ;
-	 String filePath = "IPTable" ;
-	 String LOCALDATA_PATH = "localdata";
-	// String filePath = "/home/ec2-user/IPTable" ;
-	//String LOCALDATA_PATH = "/home/ec2-user/localdata";
+	 //String filePath = "IPTable" ;
+	 //String LOCALDATA_PATH = "localdata";
+	/*String filePath = "/Users/mihir/Desktop/IPTable.json" ;
+	String REBOOT_DATA_PATH = "/Users/mihir/Desktop/reboot.txt";
+	String SERVER_ID_PATH = "/Users/mihir/Desktop/ami-launch-index";*/
+	
+	String filePath = "/home/ec2-user/IPTable.json" ;
+	String REBOOT_DATA_PATH = "/home/ec2-user/reboot.txt";
+	String SERVER_ID_PATH = "/home/ec2-user/ami-launch-index";
 	 int RPC_PORT = 7111;
-	 //String DOMAIN_NAME = ".bigdata.systems";
 	 String DOMAIN_NAME = ".bigdata.systems";
+	 //String DOMAIN_NAME = "localhost"
+			 ;
 	 String LOGOUTYPE = "logout";
 	 
 }
