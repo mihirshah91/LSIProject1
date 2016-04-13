@@ -49,12 +49,13 @@ public class SessionModel {
 	public int versionNumber;
 	
 	
-	public SessionModel(String id, int version,String message)
+	public SessionModel(String id, int version,String message,Date ExpiryTime)
 
 	{
 		this.sessionId = id;
 		this.versionNumber = version;
 		this.message = message;
+		this.expiryTime = ExpiryTime;
 		
 		
 	}

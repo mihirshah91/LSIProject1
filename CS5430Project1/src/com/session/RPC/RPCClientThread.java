@@ -18,6 +18,7 @@ public class RPCClientThread extends Thread {
 	static int WQAcks;
 	String message = "";
 	String serverid="";
+	SessionModel session;
 	
 	public String getServerid() {
 		return serverid;
@@ -27,7 +28,6 @@ public class RPCClientThread extends Thread {
 		this.serverid = serverid;
 	}
 
-	SessionModel session;
 
 	public void initialize() {
 		
@@ -35,18 +35,15 @@ public class RPCClientThread extends Thread {
 		System.out.println("WQAcks ="  + WQAcks);
 	}
 
-	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname) {
 
-		setCommon(rpc, id, opcode, hostname);
-
+	public RPCClientThread(RPCClient rpc,int opcode,SessionModel s,String ip)
+	{
+		this.session = s;
+		setCommon(rpc, s.getSessionId(), opcode, ip);
+		
+		
 	}
-
-	public RPCClientThread(RPCClient rpc, String id, int opcode, String hostname, String message) {
-		setCommon(rpc, id, opcode, hostname);
-		this.message = message;
-
-	}
-
+	
 	public void setCommon(RPCClient rpc, String id, int opcode, String hostname) {
 		this.client = rpc;
 		rpc.callNumber++;
@@ -81,12 +78,13 @@ public class RPCClientThread extends Thread {
 			receivePacket = new DatagramPacket(inBuf, inBuf.length);
 
 			int callidReturned = -1;
+			String data=null;
 			do {
 				System.out.println("inside do while client thread");
 				receivePacket.setLength(inBuf.length);
 				clientSocket.receive(receivePacket);
 				
-				String data = new String(receivePacket.getData());
+				data = new String(receivePacket.getData());
 				int index = data.indexOf("_");
 				if(opcode == Constants.SESSIONLOGOUT)
 					break;
@@ -97,15 +95,11 @@ public class RPCClientThread extends Thread {
 
 			} while (callidReturned != localNumber);
 
-//			if (opcode == Constants.SESSIONLOGOUT) {
-//
-//			} else
+
 			{
 				WQAcks++;
 
-				// synchronized (RPCClient.sessionObj ) {
-				/*if(host.equals("10.132.2.77"))
-					sleep(3000);*/
+			
 				
 				if (WQAcks <= Constants.WQ && opcode == Constants.SESSIONWRITE)
 				{
@@ -116,10 +110,12 @@ public class RPCClientThread extends Thread {
 						RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + serverid;
 				}
 				// synchronized (RPCClient.sessionObj) {
-				if (RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT) {
+				
+				// think for read and write
+				if (data == null && RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT && opcode!=Constants.SESSIONWRITE) {
 						
 					System.out.println("inside first time assigning the object value");
-					String data = new String(receivePacket.getData());
+					//data = new String(receivePacket.getData());
 					String splitData[] = data.split(Constants.DELIMITER);
 					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4]);
 					RPCClient.sessionObj.setIntialserverId(serverid);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -61,27 +62,32 @@ public class RPCClient {
 	}
 	
 
-	
-	
-	
-	public SessionModel sendRequest(String id, int opcode, String message) {
+	public SessionModel sendRequest(String id, int opcode, SessionModel s) {
 
 		try {
 			sessionObj = null;
 			//locationMetdata = "";
 			RPCClientThread.WQAcks = 0;
-			
-			// following method builds the map
 			System.out.println("inside RPCClient with opcode = " + opcode);
 			
-			Iterator<Map.Entry<String,String>> itr = null;
-			//Iterator<String> itr = null;
 			if(opcode == Constants.SESSIONREAD)
-				//itr = dest.iterator();
-				itr = serverIdIp.entrySet().iterator();
-			else
-				//itr = allDests.iterator();
-				itr = StaleSessionCleaner.serverMap.entrySet().iterator();
+				{
+				callThreads(serverIdIp,Constants.SESSIONREAD,s);
+				
+				// Read the object returned by the servers, do the version increment, replace the message and then call write again
+				SessionModel existingSession = RPCClient.sessionObj;
+				existingSession.setVersionNumber(existingSession.getVersionNumber() + 1);
+				existingSession.setMessage(s.message);
+				existingSession.setExpiryTime( new Date((new Date()).getTime() + Constants.EXPIRYTIME));
+				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,existingSession);
+				return existingSession;
+				
+				}
+			else if(opcode == Constants.SESSIONWRITE)  // first time create session
+			{
+				s.setExpiryTime(new Date((new Date()).getTime() + Constants.EXPIRYTIME));
+				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,s);
+			}
 			
 			System.out.println("SESSION ID : " + id);
 			int index = 0;
@@ -89,46 +95,59 @@ public class RPCClient {
 			if(opcode == Constants.SESSIONWRITE)
 				locationMetdata="";
 			
-			while(itr.hasNext()) {
-				
-				
-				Map.Entry<String, String> next = itr.next();
-				
-				System.out.println("inside RPCClient with server ip =" + next.getValue());
-				
-				RPCClientThread thread = null;
-				if (opcode == Constants.SESSIONREAD)
-				{
-					//thread = new RPCClientThread(this, id, opcode, next);
-					thread = new RPCClientThread(this, id, opcode, next.getValue());
-					
-				}
-				else if (opcode == Constants.SESSIONWRITE)
-				{
-					
-					thread = new RPCClientThread(this, id, opcode, next.getValue(), message);
-					
-				}
-				else if (opcode == Constants.SESSIONLOGOUT) {
-				
-					thread = new RPCClientThread(this, id, opcode, next.getValue());
-					
-
-				}
-				thread.setServerid(next.getKey());
-				//thread.initialize();
-				// RPCClientThread thread = new RPCClientThread();
-				index++; 
-				thread.start();
-				thread.join();
-
-			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return sessionObj;
+	}
+	
+	
+	
+	public void callThreads(Map<String, String> map,int opcode, SessionModel s)
+	{
+		Iterator<Map.Entry<String,String>> itr = map.entrySet().iterator();
+		
+		
+		while(itr.hasNext()) {
+			
+			
+			Map.Entry<String, String> next = itr.next();
+			
+			System.out.println("inside RPCClient with server ip =" + next.getValue());
+			
+			RPCClientThread thread = null;
+			if (opcode == Constants.SESSIONREAD)
+			{
+				thread = new RPCClientThread(this, opcode,s, next.getValue());
+				
+			}
+			else if (opcode == Constants.SESSIONWRITE)
+			{
+				
+				thread = new RPCClientThread(this, opcode, s,next.getValue());
+				
+			}
+			else if (opcode == Constants.SESSIONLOGOUT) {
+			
+				thread = new RPCClientThread(this, opcode, s,next.getValue());
+				
+
+			}
+			thread.setServerid(next.getKey());
+			
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		
 	}
 	
 	

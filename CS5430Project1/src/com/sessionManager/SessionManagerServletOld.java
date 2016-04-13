@@ -3,7 +3,6 @@ package com.sessionManager;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.session.RPC.RPCClient;
 import com.sessionModel.SessionModel;
+import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 
 /**
  * @author mihir Servlet implementation class SessionManagerServlet. It has
@@ -24,15 +24,15 @@ import com.sessionModel.SessionModel;
 
 // TODO
 // Add cookie back to each response
-@WebServlet("/SessionManagerServlet")
-public class SessionManagerServlet extends HttpServlet {
+@WebServlet("/SessionManagerServletOld")
+public class SessionManagerServletOld extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Map<String, SessionModel> sessionTable = new ConcurrentHashMap<String, SessionModel>();
 	// always written in seconds
 	public static int sessionNumber = 1;
 	Cookie sessionCookie;
 
-	public SessionManagerServlet() {
+	public SessionManagerServletOld() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -59,7 +59,6 @@ public class SessionManagerServlet extends HttpServlet {
 
 		// handle the case for session time-out here
 		sessionCookie = null;
-		boolean sessionFound = false;
 		if (cookies != null) {
 			for (Cookie c : cookies) {
 
@@ -73,36 +72,41 @@ public class SessionManagerServlet extends HttpServlet {
 					sessionId = tempData[0];
 					message = request.getParameter("userMessage");
 					sessionCookie = c;
-					sessionFound=true;
 
 					break;
 
 				}
 			}
 
-			if(!sessionFound)
-			{
-				// get the new id and call with opcode write
-				String id = getUniqueId();
-				RPCClient c = new RPCClient();
-				SessionModel s = new SessionModel(id, Constants.DEFAULTVERSIONINT, Constants.DEFAULTMESSAGE, new Date());
-				c.sendRequest(id, Constants.SESSIONWRITE, s);
-				
-				
-				
+			if (sessionCookie == null) {
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
-			
-			if (request.getParameter("replaceButton") != null) {
-					
+
+			else {
+				if (request.getParameter("replaceButton") != null) {
+					// call replace method only if sessionid found else ignore -
+					// this
+					// can happen if session is expired and refresh is called
 					readLocation(Constants.SESSIONREAD);
-					RPCClient c = new RPCClient();
-					replace(sessionId,message);
-					request.setAttribute("type", "render");
+					if (sessionId != "")
+						replace(sessionId, message);
+					request.setAttribute("type", "replace");
+					// sessionCookie.setMaxAge(expiry);
+					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
+					// response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-				} 
+				} /*else if (request.getParameter("refreshButton") != null) {
+					// call refresh method
 
-				else if (request.getParameter("logoutButton") != null)
+					readLocation(Constants.SESSIONREAD);
+					refresh(sessionId);
+					request.setAttribute("type", "refresh"); //
+					//sessionCookie.setMaxAge(Constants.EXPIRYTIME); //
+					//response.addCookie(sessionCookie);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+
+				}*/ else if (request.getParameter("logoutButton") != null)
 
 				{
 					// call logout method
@@ -120,7 +124,7 @@ public class SessionManagerServlet extends HttpServlet {
 					// if( sessionId == null && sessionId=="")
 					
 					readLocation(Constants.SESSIONREAD);
-					refresh(sessionId, message);
+					refresh(sessionId, request,response);
 					request.setAttribute("type", "refresh");
 					// sessionCookie.setMaxAge(Constants.EXPIRYTIME);
 					// response.addCookie(sessionCookie);
@@ -130,13 +134,18 @@ public class SessionManagerServlet extends HttpServlet {
 			}
 
 		}
-	
+	}
 
 	public void readLocation(int opcode) {
 		String splitData[] = null;
-		String cookieValue = sessionCookie.getValue();
-		splitData = cookieValue.split(Constants.DELIMITER);
-		
+
+		if (sessionCookie == null)
+			opcode = Constants.SESSIONWRITE;
+		else {
+			String cookieValue = sessionCookie.getValue();
+			splitData = cookieValue.split(Constants.DELIMITER);
+		}
+
 		if (opcode == Constants.SESSIONREAD)
 			RPCClient.intializeIPList(splitData);
 
@@ -146,31 +155,41 @@ public class SessionManagerServlet extends HttpServlet {
 	 * Removes the entry from sessionTable
 	 */
 
-	// TODO LOGOUT
 	public void logout(String sessionId) {
 		sessionTable.remove(sessionId);
 		System.out.println("Replace method called");
 		RPCClient c = new RPCClient();
-		//SessionModel s = c.sendRequest(sessionId, Constants.SESSIONLOGOUT, "");
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONLOGOUT, "");
 	}
 
-	public void refresh(String sessionId,String message) throws IOException, ServletException {
+	public void refresh(String sessionId, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RPCClient c = new RPCClient();
-		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, new SessionModel(sessionId, 1, message , new Date()));
-		
+		if (sessionTable == null || !sessionTable.containsKey(sessionId)) {
+//			sessionId = getUniqueId();
+//			c.sendRequest(sessionId, Constants.SESSIONWRITE, "");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		} else {
+
+			SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, "");
+		}
 	}
 
-	
+	/*
+	 * Replaces the message in hashmap corresponding to the sessionid
+	 */
 	public void replace(String sessionId, String message) {
 
 		System.out.println("Replace method called");
 		RPCClient c = new RPCClient();
-		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, new SessionModel(sessionId, 1, message , new Date()));
-		
+		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, message);
+		/*
+		 * SessionModel s = sessionTable.get(sessionId); s.setMessage(message);
+		 * sessionTable.put(sessionId, s);
+		 */
 
 	}
 
-	/*public SessionModel retrieveSession(String sessionId) {
+	public SessionModel retrieveSession(String sessionId) {
 		System.out.println("inside retrieve sesison");
 		RPCClient c = new RPCClient();
 		SessionModel s = null;
@@ -184,7 +203,7 @@ public class SessionManagerServlet extends HttpServlet {
 
 		return null;
 	}
-*/
+
 	/*
 	 * Generates the uniqueId if session not found
 	 */
@@ -217,5 +236,24 @@ public class SessionManagerServlet extends HttpServlet {
 		return sessionId;
 	}
 
-	
+	/*
+	 * Creates the newEntry in the hashMap if session is not found for user
+	 * request
+	 */
+
+	public String createSession(String uniqueID, HttpServletRequest request) {
+		System.out.println("inside create session");
+		System.out.println("sessionTable= " + sessionTable);
+
+		RPCClient c = new RPCClient();
+		SessionModel s = null;
+		if (sessionCookie == null)
+			s = c.sendRequest(uniqueID, Constants.SESSIONWRITE, "");
+		else
+			s = c.sendRequest(uniqueID, Constants.SESSIONREAD, "");
+		System.out.println("unique id generated is " + uniqueID);
+		return uniqueID;
+
+	}
+
 }

@@ -47,101 +47,22 @@
   --%>
 
 	<%
-		Cookie sessioCookie = null;
-		Cookie[] cookies = request.getCookies();
-		SessionManagerServlet s = new SessionManagerServlet();
-		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
-		response.setHeader("Pragma", "no-cache");
-		//response.setDateHeader("Expires", -1);
-		//response.setDateHeader("Last-Modified", new Date().getTime());
 
-		boolean sessionFound = false;
+	String type = (String) request.getAttribute("type");
+	System.out.println("type in jsp=" + type);
+
+	if (type == null)
+
+	{
 		
-		if (cookies != null) {
-			for (Cookie c : cookies) {
-				System.out.println("cookie " + c.getName());
-				if (c.getName().equals("CS5300Project1SessionId")) {
-						
-					String cookieValue = c.getValue();
-					/* int index = cookieValue.indexOf("_");
-					sessionId = cookieValue.substring(0, index); */
-					String splitData[] = cookieValue.split("_");
-					SessionModel sessionObj = null;
+	request.getRequestDispatcher("/SessionManagerServlet").forward(request, response);
+	
+	}
+	else{
+		System.out.println("else");
+	}
 
-					String type = (String) request.getAttribute("type");
-					System.out.println("type in jsp=" + type);
 
-					if (type == null)
-
-					{
-						
-						String sessionID= splitData[0];
-						//sessionObj = s.retrieveSession(splitData[0] + Constants.DELIMITERVERSION + splitData[1]);
-						if(SessionManagerServlet.sessionTable == null ||  !SessionManagerServlet.sessionTable.containsKey(sessionId)){
-							//sessionID =new SessionManagerServlet().getUniqueId();
-							
-							//It will move to create new session
-							break;
-							
-							
-						}
-						else{
-						sessionObj = s.retrieveSession(sessionID);
-						}
-						//c.setMaxAge(Constants.EXPIRYTIME+ Constants.delta);
-					} else
-
-					{
-						
-						int temp = Integer.parseInt(splitData[1]);
-						System.out.println("inside type=replcae");
-						/* sessionObj = SessionManagerServlet.sessionTable
-							.get(splitData[0]);  */
-						sessionObj = SessionManagerServlet.sessionTable
-								.get(splitData[0]);
-					}
-
-					if (sessionObj != null) {
-						versionNumber = sessionObj.getVersionNumber();
-						message = sessionObj.getMessage();
-						sessionId = sessionObj.getSessionId();
-						/* cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
-								+ splitData[2] + RPCClient.locationMetdata ; */
-						cookie = sessionId + Constants.DELIMITER + versionNumber + Constants.DELIMITER
-								+ RPCClient.locationMetdata;
-						c.setMaxAge(Constants.EXPIRYTIME);
-						c.setValue(cookie);
-						c.setDomain(Constants.DOMAIN_NAME);
-						c.setPath("/"); 
-						response.addCookie(c);
-						expiryTime = sessionObj.getExpiryTime();
-						serverId = RPCClient.sessionObj.getIntialserverId();
-
-						sessionFound = true;
-					}
-				break;
-				}
-			
-
-			}
-
-		}
-
-		if (!sessionFound) {
-			String sessionID = s.getUniqueId();
-			s.createSession(sessionID, request);
-			String temp = sessionID + Constants.DELIMITER + Constants.DEFAULTVERSIONNUMBER + Constants.DELIMITER
-					+ RPCClient.locationMetdata;
-
-			Cookie sessionIdCookie = new Cookie("CS5300Project1SessionId", temp);
-			sessionIdCookie.setMaxAge(Constants.EXPIRYTIME);
-			sessionIdCookie.setDomain(Constants.DOMAIN_NAME);
-			
-			sessionIdCookie.setPath("/");
-			response.addCookie(sessionIdCookie);
-			serverId = RPCClient.sessionObj.getIntialserverId();
-			initialize(sessionID, temp);
-		}
 	%>
 
 
