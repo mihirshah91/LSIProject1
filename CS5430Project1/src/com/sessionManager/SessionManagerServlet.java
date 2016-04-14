@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.session.RPC.RPCClient;
 import com.sessionModel.SessionModel;
+import com.sun.xml.internal.bind.v2.runtime.output.StAXExStreamWriterOutput;
 
 /**
  * @author mihir Servlet implementation class SessionManagerServlet. It has
@@ -83,6 +84,7 @@ public class SessionManagerServlet extends HttpServlet {
 			if(!sessionFound)
 			{
 				// get the new id and call with opcode write
+				System.out.println("sesion not found with ami launch index 0");
 				String id = getUniqueId();
 				RPCClient c = new RPCClient();
 				SessionModel s = new SessionModel(id, Constants.DEFAULTVERSIONINT, Constants.DEFAULTMESSAGE, new Date());
@@ -211,7 +213,7 @@ public class SessionManagerServlet extends HttpServlet {
 		String sessionId = null;
 		try {
 			String filepath = this.getClass().getResource("/").getPath();
-
+			System.out.println("sesion not found with ami launch index 0 in method");
 			filepath = filepath.replace("WEB-INF/classes/", "");
 			System.out.println("LOCAL DATA FILE " + filepath);
 			

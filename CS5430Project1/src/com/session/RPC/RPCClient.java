@@ -73,7 +73,7 @@ public class RPCClient {
 					SessionModel existingSession = RPCClient.sessionObj;
 					existingSession.setVersionNumber(existingSession.getVersionNumber() + 1);
 					
-					if(!s.message.equals(""))
+					if(s!=null && s.message!=null && !s.message.equals(""))
 						existingSession.setMessage(s.message);
 					
 					Calendar cal = Calendar.getInstance();
@@ -98,7 +98,7 @@ public class RPCClient {
 				cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
 				s.setExpiryTime(new Date(cal.getTimeInMillis()));
 				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,s);
-				
+				s.setIntialserverId(Constants.INITIALID);
 			
 				
 				return s;

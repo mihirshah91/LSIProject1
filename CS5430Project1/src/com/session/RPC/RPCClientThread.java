@@ -9,7 +9,6 @@ package com.session.RPC;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.text.SimpleDateFormat;
 
 import com.sessionManager.Constants;
 import com.sessionModel.SessionModel;
@@ -72,8 +71,14 @@ public class RPCClientThread extends Thread {
 			System.out.println("inside client thread");
 			System.out.println();
 			//SimpleDateFormat sdfr = new SimpleDateFormat();
-			String sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id
+			
+			String sendData = null;
+			if(opcode == Constants.SESSIONWRITE)
+				sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id
 					+ Constants.DELIMITER + session.getVersionNumber() + Constants.DELIMITER + session.getMessage() + Constants.DELIMITER + Constants.sdfr.format(session.getExpiryTime()) ;
+			else
+				sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id;
+			
 			outBuf = sendData.getBytes();
 			clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName(host);

@@ -71,7 +71,7 @@
 
 
 
-	Net id:mgs275 &nbsp;&nbsp; Session :
+	Net id:mgs275, hvp4, sp2339 &nbsp;&nbsp;   Session :
 	<%
 		out.print(s.getSessionId());
 	%>
@@ -116,9 +116,17 @@
 
 	<%= s.getExpiryTime().toString() %>
 
+<br/>
+<br/>
+
 	Session found server :
 	<%=s.getIntialserverId()%>
 
+<br/>
+<br/>
+Cookie Domain :
+
+<%= Constants.DOMAIN_NAME %>
 
 </body>
 </html>

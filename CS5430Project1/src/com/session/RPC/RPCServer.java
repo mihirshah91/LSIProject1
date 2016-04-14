@@ -39,12 +39,12 @@ public class RPCServer extends Thread {
 	public byte[] sessionLogOut(String splitData[]) {
 		
 		
-		SessionModel s = SessionManagerServlet.sessionTable.get(splitData[2]);
+		SessionModel s = SessionManagerServlet.sessionTable.get(splitData[2].trim());
 		System.out.println("inside logout");
 		System.out.println("s=" + s);
 		if (s != null) {
 
-			SessionManagerServlet.sessionTable.remove(splitData[2]);
+			SessionManagerServlet.sessionTable.remove(splitData[2].trim());
 
 		}
 		String data = splitData[0] ;
@@ -55,7 +55,7 @@ public class RPCServer extends Thread {
 		
 		
 		Map<String, SessionModel> sessionTable = SessionManagerServlet.sessionTable;
-		SessionModel s = SessionManagerServlet.sessionTable.get(splitData[2]);
+		SessionModel s = SessionManagerServlet.sessionTable.get(splitData[2].trim());
 		
 		System.out.println("sessionid = " + splitData[2] + "callid=" + splitData[1]);
 		System.out.println("inside session read");
@@ -84,7 +84,7 @@ public class RPCServer extends Thread {
 		s.setVersionNumber(Integer.parseInt(splitData[3]));
 		s.setMessage(splitData[4]);
 		s.setExpiryTime(Constants.sdfr.parse(splitData[5]));
-		sessionTable.put(s.getSessionId(), s);
+		sessionTable.put(s.getSessionId().trim(), s);
 		String returnString = splitData[0] + Constants.DELIMITER + Constants.SUCCESSFUL;
 		return returnString.getBytes();
 		} 
