@@ -1,4 +1,4 @@
-package com.sessionManager;
+/*package com.sessionManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,10 +17,10 @@ import com.session.RPC.RPCClient;
 import com.sessionModel.SessionModel;
 import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 
-/**
+*//**
  * @author mihir Servlet implementation class SessionManagerServlet. It has
  *         doPost method implemented and also helper methods
- */
+ *//*
 
 // TODO
 // Add cookie back to each response
@@ -43,11 +43,11 @@ public class SessionManagerServletOld extends HttpServlet {
 		doPost(request, response);
 	}
 
-	/*
+	
 	 * Post method of this servlet is called on form submisison. It first
 	 * identifies the button pressed with help of request.getParameter() and
 	 * takes the respective actions
-	 */
+	 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -64,10 +64,10 @@ public class SessionManagerServletOld extends HttpServlet {
 
 				if (c.getName().equals("CS5300Project1SessionId")) {
 					String cookieValue = c.getValue();
-					/*
+					
 					 * int index = cookieValue.indexOf("_"); sessionId =
 					 * cookieValue.substring(0, index);
-					 */
+					 
 					String tempData[] = cookieValue.split(Constants.DELIMITER);
 					sessionId = tempData[0];
 					message = request.getParameter("userMessage");
@@ -96,7 +96,7 @@ public class SessionManagerServletOld extends HttpServlet {
 					// response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-				} /*else if (request.getParameter("refreshButton") != null) {
+				} else if (request.getParameter("refreshButton") != null) {
 					// call refresh method
 
 					readLocation(Constants.SESSIONREAD);
@@ -106,7 +106,7 @@ public class SessionManagerServletOld extends HttpServlet {
 					//response.addCookie(sessionCookie);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 
-				}*/ else if (request.getParameter("logoutButton") != null)
+				} else if (request.getParameter("logoutButton") != null)
 
 				{
 					// call logout method
@@ -151,9 +151,9 @@ public class SessionManagerServletOld extends HttpServlet {
 
 	}
 
-	/*
+	
 	 * Removes the entry from sessionTable
-	 */
+	 
 
 	public void logout(String sessionId) {
 		sessionTable.remove(sessionId);
@@ -174,18 +174,18 @@ public class SessionManagerServletOld extends HttpServlet {
 		}
 	}
 
-	/*
+	
 	 * Replaces the message in hashmap corresponding to the sessionid
-	 */
+	 
 	public void replace(String sessionId, String message) {
 
 		System.out.println("Replace method called");
 		RPCClient c = new RPCClient();
 		SessionModel s = c.sendRequest(sessionId, Constants.SESSIONREAD, message);
-		/*
+		
 		 * SessionModel s = sessionTable.get(sessionId); s.setMessage(message);
 		 * sessionTable.put(sessionId, s);
-		 */
+		 
 
 	}
 
@@ -204,9 +204,9 @@ public class SessionManagerServletOld extends HttpServlet {
 		return null;
 	}
 
-	/*
+	
 	 * Generates the uniqueId if session not found
-	 */
+	 
 
 	public String getUniqueId() {
 		String sessionId = null;
@@ -236,10 +236,10 @@ public class SessionManagerServletOld extends HttpServlet {
 		return sessionId;
 	}
 
-	/*
+	
 	 * Creates the newEntry in the hashMap if session is not found for user
 	 * request
-	 */
+	 
 
 	public String createSession(String uniqueID, HttpServletRequest request) {
 		System.out.println("inside create session");
@@ -257,3 +257,4 @@ public class SessionManagerServletOld extends HttpServlet {
 	}
 
 }
+*/

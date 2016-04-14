@@ -3,6 +3,7 @@ package com.sessionManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -129,9 +130,9 @@ class GarbageCollector extends TimerTask
 			Map.Entry<String,SessionModel> s = itr.next();
 			String id = s.getKey();
 			SessionModel sm = s.getValue();
-
+			Calendar cal = Calendar.getInstance();
 			
-			if(sm.getExpiryTime().getTime() < (new Date()).getTime())
+			if(sm.getExpiryTime().getTime() < cal.getTimeInMillis())
 			{
 				//remove entry from map
 				sessionTable.remove(id);

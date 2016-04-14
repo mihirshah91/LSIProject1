@@ -1,7 +1,9 @@
 package com.sessionManager;
 
+import java.text.SimpleDateFormat;
+
 public interface Constants {
-	 int EXPIRYTIME = 60; // in seconds
+	 int EXPIRYTIME = 80; // in seconds
 	 String DELIMITER = "_"; 
 	 String DELIMITERVERSION = "$";
 	 int SESSIONREAD = 1;
@@ -11,7 +13,10 @@ public interface Constants {
 	 int DEFAULTVERSIONINT = 1;
 	 String DUMMYMESSAGE= "dummy";
 	 String SESSION_NOTFOUND = "sessionNotFound";
-	 String dateFormat = "dd-M-yyyy hh:mm:ss";
+	 String SUCCESSFUL = "success";
+	 String FAILURE = "failure";
+	 String dateFormat = "dd-M-yyyy HH:mm:ss";
+	 String COOKIENAME = "CS5300Project1";
 	 int SESSIONLOGOUT = 3; 
 	 int F = 1;
 	 int R =  F + 1;
@@ -22,17 +27,20 @@ public interface Constants {
 	 //String filePath = "/Users/Shiva/git/LSIProject1/CS5430Project1/IPTable" ;
 	 //String filePath = "IPTable" ;
 	 //String LOCALDATA_PATH = "localdata";
-	String filePath = "/Users/Shiva/Desktop/IPTable.json" ;
-	String REBOOT_DATA_PATH = "/Users/Shiva/Desktop/reboot.txt";
-	String SERVER_ID_PATH = "/Users/Shiva/Desktop/ami-launch-index";
+	String filePath = "/Users/mihir/Desktop/IPTable.json" ;
+	String REBOOT_DATA_PATH = "/Users/mihir/Desktop/reboot.txt";
+	String SERVER_ID_PATH = "/Users/mihir/Desktop/ami-launch-index";
+	String DOMAINPATH="/";
+	int SOCKETTIMEOUT = 100000000;
+	
+	SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 	
 	//String filePath = "/home/ec2-user/IPTable.json" ;
 	//String REBOOT_DATA_PATH = "/home/ec2-user/reboot.txt";
 	//String SERVER_ID_PATH = "/home/ec2-user/ami-launch-index";
 	 int RPC_PORT = 7111;
 	 //String DOMAIN_NAME = ".bigdata.systems";
-	 String DOMAIN_NAME = "localhost"
-			 ;
+	 String DOMAIN_NAME = "localhost";
 	 String LOGOUTYPE = "logout";
 	 
 }

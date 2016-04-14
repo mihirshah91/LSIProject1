@@ -1,20 +1,12 @@
 package com.session.RPC;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.print.attribute.standard.Destination;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.sessionManager.Constants;
 import com.sessionManager.StaleSessionCleaner;
@@ -39,9 +31,8 @@ public class RPCClient {
 	public static void intializeIPList(String[] ips)
 	{
 		System.out.println("intialize ip for read called");
-		//dest.clear();
-		serverIdIp.clear();
 		
+		serverIdIp.clear();
 		String ipsnew[] = null;
 		
 		if(RPCClient.locationMetdata !=null)
@@ -49,9 +40,6 @@ public class RPCClient {
 			
 		for(int i=2; i<ips.length;i++)
 		{
-			
-			//dest.add(serverMap.get(ips[i]));
-			//serverid.add(ips[i]);
 			serverIdIp.put(ips[i], StaleSessionCleaner.serverMap.get(ips[i]));
 			
 		}
@@ -66,7 +54,7 @@ public class RPCClient {
 
 		try {
 			sessionObj = null;
-			//locationMetdata = "";
+			locationMetdata = "";
 			RPCClientThread.WQAcks = 0;
 			System.out.println("inside RPCClient with opcode = " + opcode);
 			
@@ -74,29 +62,51 @@ public class RPCClient {
 				{
 				callThreads(serverIdIp,Constants.SESSIONREAD,s);
 				
-				// Read the object returned by the servers, do the version increment, replace the message and then call write again
-				SessionModel existingSession = RPCClient.sessionObj;
-				existingSession.setVersionNumber(existingSession.getVersionNumber() + 1);
-				existingSession.setMessage(s.message);
-				existingSession.setExpiryTime( new Date((new Date()).getTime() + Constants.EXPIRYTIME));
-				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,existingSession);
-				return existingSession;
+				
+				
+				// if sessionobject is still null, that means no server could found the session
+				if(RPCClient.sessionObj != null)
+				{
+				
+					// Read the object returned by the servers, do the version increment, replace the message and then call write again
+
+					SessionModel existingSession = RPCClient.sessionObj;
+					existingSession.setVersionNumber(existingSession.getVersionNumber() + 1);
+					
+					if(!s.message.equals(""))
+						existingSession.setMessage(s.message);
+					
+					Calendar cal = Calendar.getInstance();
+					cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+					existingSession.setExpiryTime( new Date(cal.getTimeInMillis()));
+					locationMetdata = "";
+					RPCClientThread.WQAcks = 0;
+					callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,existingSession);
+					return existingSession;
+				}
+				
+				s.setSessionNotFound(true);
+				return s;
+				
+				
 				
 				}
 			else if(opcode == Constants.SESSIONWRITE)  // first time create session
 			{
 				
-				s.setExpiryTime(new Date((new Date()).getTime() + Constants.EXPIRYTIME));
-				locationMetdata="";
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
+				s.setExpiryTime(new Date(cal.getTimeInMillis()));
 				callThreads(StaleSessionCleaner.serverMap,Constants.SESSIONWRITE,s);
+				
+			
+				
+				return s;
 			}
-			
-//			System.out.println("SESSION ID : " + id);
-//			int index = 0;
-//			
-//			if(opcode == Constants.SESSIONWRITE)
-//				locationMetdata="";
-			
+			else
+			{
+				callThreads(serverIdIp,Constants.SESSIONLOGOUT,s);
+			}
 			
 
 		} catch (Exception e) {
@@ -138,6 +148,7 @@ public class RPCClient {
 				
 
 			}
+		
 			thread.setServerid(next.getKey());
 			
 			thread.start();

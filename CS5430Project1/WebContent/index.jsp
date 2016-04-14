@@ -1,5 +1,8 @@
 
 
+<%@page import="com.session.RPC.RPCClient"%>
+<%@page import="com.sessionManager.Constants"%>
+<%@page import="com.sessionModel.SessionModel"%>
 <%@ page import="java.io.*,java.util.*"%>
 
 
@@ -43,18 +46,24 @@
 	<%
 
 	String type = (String) request.getAttribute("type");
-	System.out.println("type in jsp=" + type);
+	SessionModel s = null;
+	String cookie = null;
 
-	if (type == null)
+// 	if (type == null)
 
-	{
+// 	{
 		
-	request.getRequestDispatcher("/SessionManagerServlet").forward(request, response);
+// 	response.sendRedirect("/SessionManagerServlet");
 	
-	}
-	else{
-		System.out.println("else");
-	}
+// 	}
+// 	else{
+		
+	System.out.println("else");
+	s = (SessionModel) request.getAttribute("SessionData");
+	cookie = s.getSessionId() + Constants.DELIMITER + s.getVersionNumber() + Constants.DELIMITER + RPCClient.locationMetdata ;
+	System.out.println("type in jsp=" + type);
+		
+	
 
 
 	%>
@@ -64,12 +73,12 @@
 
 	Net id:mgs275 &nbsp;&nbsp; Session :
 	<%
-		out.print(sessionId);
+		out.print(s.getSessionId());
 	%>
 
 
 	&nbsp;&nbsp; Version:<%
-		out.print(versionNumber);
+		out.print(s.getVersionNumber());
 	%>
 	&nbsp;&nbsp;
 
@@ -84,16 +93,16 @@
 
 		<p>
 			<%
-				out.print(message);
+				out.print(s.getMessage());
 			%>
 		</p>
 
 		<input type="submit" name="replaceButton" value="Replace"></input>
-		&nbsp;&nbsp; <input type="text" name="userMessage" value=""
-			required="required" maxLength="512"></input> <br /> <input
-			type="submit" name="refreshButton" value="Refresh" formnovalidate></input>
-		<br /> <input type="submit" name="logoutButton" value="Logout"
-			formnovalidate></input> <br />
+		&nbsp;&nbsp; 
+		<input type="text" name="userMessage" value="" required="required" maxLength="512"></input> <br />
+	<input type="submit" name="refreshButton" value="Refresh" formnovalidate></input>
+		<br /> 
+		<input type="submit" name="logoutButton" value="Logout" formnovalidate></input> <br />
 
 
 	</form>
@@ -105,10 +114,10 @@
 	%>
 	&nbsp;&nbsp; Expires :
 
-	<%="expiryTime"%>
+	<%= s.getExpiryTime().toString() %>
 
 	Session found server :
-	<%=serverId%>
+	<%=s.getIntialserverId()%>
 
 
 </body>

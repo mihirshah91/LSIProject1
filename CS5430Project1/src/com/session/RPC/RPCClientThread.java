@@ -1,3 +1,9 @@
+
+/*
+ * Order of sending data : id version message expiryTime
+ */
+
+
 package com.session.RPC;
 
 import java.net.DatagramPacket;
@@ -65,13 +71,14 @@ public class RPCClientThread extends Thread {
 
 			System.out.println("inside client thread");
 			System.out.println();
+			//SimpleDateFormat sdfr = new SimpleDateFormat();
 			String sendData = localNumber + Constants.DELIMITER + opcode + Constants.DELIMITER + id
-					+ Constants.DELIMITER + message;
+					+ Constants.DELIMITER + session.getVersionNumber() + Constants.DELIMITER + session.getMessage() + Constants.DELIMITER + Constants.sdfr.format(session.getExpiryTime()) ;
 			outBuf = sendData.getBytes();
 			clientSocket = new DatagramSocket();
 			InetAddress IPAddress = InetAddress.getByName(host);
 			DatagramPacket sendPkt = new DatagramPacket(outBuf, outBuf.length, IPAddress, Constants.RPC_PORT);
-			clientSocket.setSoTimeout(10000);
+			clientSocket.setSoTimeout(Constants.SOCKETTIMEOUT);
 			clientSocket.send(sendPkt);
 
 			byte[] inBuf = new byte[client.maxPacketSize];
@@ -85,10 +92,11 @@ public class RPCClientThread extends Thread {
 				clientSocket.receive(receivePacket);
 				
 				data = new String(receivePacket.getData());
-				int index = data.indexOf("_");
+				String splitData[]  = data.split(Constants.DELIMITER);
+				
 				if(opcode == Constants.SESSIONLOGOUT)
 					break;
-				callidReturned = Integer.parseInt(data.substring(0, index));
+				callidReturned = Integer.parseInt(splitData[0]);
 
 				System.out.println("localNumber=" + localNumber);
 				System.out.println("caliid=" + callidReturned);
@@ -109,25 +117,19 @@ public class RPCClientThread extends Thread {
 					else
 						RPCClient.locationMetdata = RPCClient.locationMetdata + Constants.DELIMITER + serverid;
 				}
-				// synchronized (RPCClient.sessionObj) {
 				
-				// think for read and write
-				if (data == null && RPCClient.sessionObj == null && opcode != Constants.SESSIONLOGOUT ) {
+				if (RPCClient.sessionObj == null && !data.contains(Constants.SESSION_NOTFOUND) && opcode != Constants.SESSIONLOGOUT && opcode!=Constants.SESSIONWRITE ) {
 						
 					System.out.println("inside first time assigning the object value");
 				
 					String splitData[] = data.split(Constants.DELIMITER);
+					RPCClient.sessionObj = new SessionModel(splitData[2], Integer.parseInt(splitData[3]), splitData[4], Constants.sdfr.parse(splitData[5]));
 					RPCClient.sessionObj.setIntialserverId(serverid);
-					SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
-					RPCClient.sessionObj = new SessionModel(splitData[1], Integer.parseInt(splitData[2]), splitData[4],sdfr.parse(splitData[3]));
-					
 
 				}
 			}
 
-			// }
-
-			clientSocket.close();
+		clientSocket.close();
 
 		}
 

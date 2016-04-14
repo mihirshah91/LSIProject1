@@ -13,6 +13,17 @@ public class SessionModel {
 	public String message;
 	public Date expiryTime;
 	public String intialserverId;
+	public boolean sessionNotFound ;
+
+	
+
+	public boolean isSessionNotFound() {
+		return sessionNotFound;
+	}
+
+	public void setSessionNotFound(boolean sessionNotFound) {
+		this.sessionNotFound = sessionNotFound;
+	}
 
 	public SessionModel() {
 		// TODO Auto-generated constructor stub
