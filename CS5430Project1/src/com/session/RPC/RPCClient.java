@@ -11,7 +11,7 @@ import java.util.Map;
 import com.sessionManager.Constants;
 import com.sessionManager.StaleSessionCleaner;
 import com.sessionModel.SessionModel;
-
+import java.util.*;
 public class RPCClient {
 
 	static List<String> dest = new ArrayList<>();
@@ -48,12 +48,19 @@ public class RPCClient {
 
 		int i = 0;
 		while (i < Constants.W) {
-			int random = (int) Math.random() * 10 % Constants.N;
-			if (!serverIdIp.containsKey(random)) {
-				serverIdIp.put(String.valueOf(random), serverid.get(random));
+			//int random = (int) Math.random() * 10 % Constants.N;
+			int random ;
+			Random rn = new Random();
+			random = 0 + rn.nextInt(Constants.N - 1 + 1);
+			System.out.println("RANDOM INDEX ID "+ random+ "Server Map" + StaleSessionCleaner.serverMap);
+			
+			if (!serverIdIp.containsKey(String.valueOf(random)) && StaleSessionCleaner.serverMap.containsKey(String.valueOf(random))) {
+				serverIdIp.put(String.valueOf(random), StaleSessionCleaner.serverMap.get(String.valueOf( random)));
 				i++;
 			}
 		}
+		
+		System.out.println("WRITE META LOCATION MAP " +  serverIdIp);
 
 	}
 
@@ -86,7 +93,9 @@ public class RPCClient {
 					existingSession.setExpiryTime(new Date(cal.getTimeInMillis()));
 					locationMetdata = "";
 					RPCClientThread.WQAcks = 0;
-					callThreads(StaleSessionCleaner.serverMap, Constants.SESSIONWRITE, existingSession);
+					//callThreads(StaleSessionCleaner.serverMap, Constants.SESSIONWRITE, existingSession);
+					initializeIPWqRandlomly();
+					callThreads(serverIdIp, Constants.SESSIONWRITE, existingSession);
 					return existingSession;
 				}
 
@@ -100,11 +109,14 @@ public class RPCClient {
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.SECOND, Constants.EXPIRYTIME);
 				s.setExpiryTime(new Date(cal.getTimeInMillis()));
-				callThreads(StaleSessionCleaner.serverMap, Constants.SESSIONWRITE, s);
+				//callThreads(StaleSessionCleaner.serverMap, Constants.SESSIONWRITE, s);
+				initializeIPWqRandlomly();
+				callThreads(serverIdIp, Constants.SESSIONWRITE, s);
 				s.setIntialserverId(Constants.INITIALID);
 
 				return s;
 			} else {
+				
 				callThreads(serverIdIp, Constants.SESSIONLOGOUT, s);
 			}
 

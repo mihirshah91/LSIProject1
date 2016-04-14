@@ -26,25 +26,25 @@ public class Constants {
 	 public static int N = W;
 	 public static int delta = 2 ; // extra seconds in discard time (delta)
 
-	public static String filePath = "/Users/Shiva/Desktop/IPTable.json" ;
-	public static String REBOOT_DATA_PATH = "/Users/Shiva/Desktop/reboot.txt";
-	public static String SERVER_ID_PATH = "/Users/Shiva/Desktop/ami-launch-index";
-	 public static String F_FILEPATH = "/Users/Shiva/Desktop/fcount.txt";
-	public static String N_FILEPATH = "/Users/Shiva/Desktop/servercount.txt";
+//	public static String filePath = "/Users/Shiva/Desktop/IPTable.json" ;
+//	public static String REBOOT_DATA_PATH = "/Users/Shiva/Desktop/reboot.txt";
+//	public static String SERVER_ID_PATH = "/Users/Shiva/Desktop/ami-launch-index";
+//	 public static String F_FILEPATH = "/Users/Shiva/Desktop/fcount.txt";
+//	public static String N_FILEPATH = "/Users/Shiva/Desktop/servercount.txt";
 	 public static String DOMAINPATH="/";
-	 public static int SOCKETTIMEOUT = 25000;
+	 public static int SOCKETTIMEOUT = 7000;
 	 public static String INITIALID = "N/A";
 	
 	 public static SimpleDateFormat sdfr = new SimpleDateFormat(Constants.dateFormat);
 	
-//	 public static String filePath = "/home/ec2-user/IPTable.json" ;
-//	 public static String REBOOT_DATA_PATH = "/home/ec2-user/reboot.txt";
-//	 public static String SERVER_ID_PATH = "/home/ec2-user/ami-launch-index";
-//	 public static String F_FILEPATH = "/var/tmp/fcount.txt";
-//	 public static String N_FILEPATH = "/var/tmp/servercount.txt";
+	 public static String filePath = "/home/ec2-user/IPTable.json" ;
+	 public static String REBOOT_DATA_PATH = "/home/ec2-user/reboot.txt";
+	 public static String SERVER_ID_PATH = "/home/ec2-user/ami-launch-index";
+	 public static String F_FILEPATH = "/var/tmp/fcount.txt";
+	 public static String N_FILEPATH = "/var/tmp/servercount.txt";
 	 public static int RPC_PORT = 7111;
-	 //public static String DOMAIN_NAME = ".bigdata.systems";
-	public static String DOMAIN_NAME = "localhost";
+	 public static String DOMAIN_NAME = ".sp2339.bigdata.systems";
+	 //public static String DOMAIN_NAME = "localhost";
 	 public static String LOGOUTYPE = "logout";
 	 
 }
